@@ -54,7 +54,7 @@ export interface EmailPayload {
 }
 
 // Enums
-export type ProductCategory = "sofa" | "chair" | "table" | "bed" | "storage";
+export type ProductCategory = "bucatarii" | "dulapuri" | "mese" | "antreuri" | "altele";
 export type ProductStyle = "modern" | "classic" | "scandinavian" | "industrial";
 export type PriceRange = "budget" | "mid" | "luxury";
 export type RoomType = "kitchen" | "drawers" | "bathrooms" | "other";
