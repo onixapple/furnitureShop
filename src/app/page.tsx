@@ -7,13 +7,14 @@ import ProductCatalog from "@/components/ProductCatalog";
 import AboutUs from "@/components/AboutUs";
 import ContactForm from "@/components/ContactForm";
 import { CustomerPreferences } from "@/types";
-/*import ContactForm from "@/components/ContactForm";
-*/
-export default function Home() {
 
+export default function Home() {
   const [preferences, setPreferences] = useState<CustomerPreferences>({
-    category: null,
-    style: null,
+    room: null,
+    kitchenType: null,
+    handles: null,
+    doorType: null,
+    colors: null,
     priceRange: null,
   });
 
@@ -30,7 +31,7 @@ export default function Home() {
       <section id="game">
         <PreferenceGame onComplete={handleGameComplete} />
       </section>
-
+    
       <section id="catalog">
         <ProductCatalog />
       </section>

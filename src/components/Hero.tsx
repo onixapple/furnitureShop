@@ -10,9 +10,9 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({
-  title = "Crafted for the Extraordinary",
-  subtitle = "Discover furniture that transforms spaces into sanctuaries. Each piece tells a story of artisanship and timeless elegance.",
-  ctaLabel = "Explore Collection",
+  title = "Creat pentru perfectiune",
+  subtitle = "Descopera solutii unice si potrivite pentru locuinta ta. Recomandam sa treci chestionarul care ne va ajuta sa intelegem ce va doriti.",
+  ctaLabel = "Incepe chestionarul",
   ctaHref = "#game",
 }) => {
 
@@ -29,8 +29,8 @@ const Hero: React.FC<HeroProps> = ({
 
       {/* Background image overlay */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
-        style={{ backgroundImage: "url('/hero-bg.jpg')" }}
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50"
+        style={{ backgroundImage: "url('/hero.jpg')" }}
       >
       </div>
 
@@ -43,7 +43,7 @@ const Hero: React.FC<HeroProps> = ({
 
         {/* Eyebrow label */}
         <p className="text-gold text-xs tracking-[0.4em] uppercase mb-6">
-          Luxury Furniture Showroom
+          Atelier de Mobila la Comanda
         </p>
 
         {/* Main title */}
@@ -55,7 +55,7 @@ const Hero: React.FC<HeroProps> = ({
         <div className="gold-divider"></div>
 
         {/* Subtitle */}
-        <p className="text-muted text-sm md:text-base tracking-wider leading-relaxed max-w-xl mx-auto mb-12">
+        <p className="text-sm md:text-base tracking-wider leading-relaxed max-w-xl mx-auto mb-12">
           {subtitle}
         </p>
 
@@ -73,7 +73,7 @@ const Hero: React.FC<HeroProps> = ({
       {/* Bottom scroll indicator */}
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
         <span className="text-muted text-xs tracking-widest uppercase">
-          Scroll
+          
         </span>
         <div className="w-px h-12 bg-gold opacity-40"></div>
       </div>

@@ -8,10 +8,10 @@ interface NavLink {
 }
 
 const links: NavLink[] = [
-  { label: "Home", href: "#hero" },
-  { label: "Discover", href: "#game" },
+  { label: "Acasa", href: "#hero" },
+  { label: "Descopera", href: "#game" },
   { label: "Catalog", href: "#catalog" },
-  { label: "About", href: "#about" },
+  { label: "Despre Noi", href: "#about" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className="fixed top-0 left-0 w-full z-50 px-12 py-6 flex justify-between items-center bg-dark bg-opacity-80 backdrop-blur-sm">
       <span className="font-serif text-2xl text-gold tracking-widest uppercase">
-        Maison
+        TeoMob
       </span>
       <div className="flex gap-10">
         {links.map((link: NavLink) => (

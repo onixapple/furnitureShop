@@ -2,90 +2,176 @@
 
 import React, { useState } from "react";
 import GameStep from "@/components/GameStep";
-import { GameStep as GameStepType, CustomerPreferences, GameOption } from "@/types";
+import ColorPicker from "@/components/ColorPicker";
+import {
+  CustomerPreferences,
+  GameStep as GameStepType,
+  GameOption,
+  RoomType,
+} from "@/types";
 
 interface PreferenceGameProps {
   onComplete?: (preferences: CustomerPreferences) => void;
 }
 
-const steps: GameStepType[] = [
-  {
-    id: 1,
-    question: "What are you furnishing?",
-    options: [
-      { id: "cat-1", label: "Living Room", value: "sofa", icon: "🛋️" },
-      { id: "cat-2", label: "Bedroom", value: "bed", icon: "🛏️" },
-      { id: "cat-3", label: "Dining Room", value: "table", icon: "🍽️" },
-      { id: "cat-4", label: "Office", value: "chair", icon: "🪑" },
-    ] as GameOption[],
-  },
-  {
-    id: 2,
-    question: "What style speaks to you?",
-    options: [
-      { id: "sty-1", label: "Modern", value: "modern", icon: "◼️" },
-      { id: "sty-2", label: "Classic", value: "classic", icon: "🏛️" },
-      { id: "sty-3", label: "Scandinavian", value: "scandinavian", icon: "🌿" },
-      { id: "sty-4", label: "Industrial", value: "industrial", icon: "⚙️" },
-    ] as GameOption[],
-  },
-  {
-    id: 3,
-    question: "What is your budget range?",
-    options: [
-      { id: "pr-1", label: "Accessible", value: "budget", icon: "💛" },
-      { id: "pr-2", label: "Mid Range", value: "mid", icon: "💎" },
-      { id: "pr-3", label: "Luxury", value: "luxury", icon: "👑" },
-    ] as GameOption[],
-  },
-];
+const emptyPreferences: CustomerPreferences = {
+  room: null,
+  kitchenType: null,
+  handles: null,
+  doorType: null,
+  colors: null,
+  priceRange: null,
+};
+
+const stepRoom: GameStepType = {
+  id: "room",
+  question: "What are you looking for?",
+  field: "room",
+  options: [
+    { id: "r1", label: "Kitchen", value: "kitchen", image: "/game/cupe.JPG" },
+    { id: "r2", label: "Drawers", value: "drawers", image: "/game/simplu.jpg" },
+    { id: "r3", label: "Bathroom", value: "bathrooms", image: "/game/cupe.JPG" },
+    { id: "r4", label: "Something Else", value: "other", image: "/game/cupe.JPG" },
+  ] as GameOption[],
+};
+
+const stepKitchenType: GameStepType = {
+  id: "kitchenType",
+  question: "Which kitchen style suits you?",
+  field: "kitchenType",
+  options: [
+    { id: "kt1", label: "Classic", value: "classic", image: "/game/cupe.JPG" },
+    { id: "kt2", label: "Modern", value: "modern", image: "/game/cupe.JPG" },
+  ] as GameOption[],
+};
+
+const stepHandles: GameStepType = {
+  id: "handles",
+  question: "Visible or hidden handles?",
+  field: "handles",
+  options: [
+    { id: "h1", label: "Visible Handles", value: "visible", image: "/game/cupe.JPG" },
+    { id: "h2", label: "Hidden Handles", value: "hidden", image: "/game/cupe.JPG" },
+  ] as GameOption[],
+};
+
+const stepDoorType: GameStepType = {
+  id: "doorType",
+  question: "How should the doors open?",
+  field: "doorType",
+  options: [
+    { id: "d1", label: "Sliding Doors", value: "sliding", image: "/game/cupe.JPG" },
+    { id: "d2", label: "Normal Opening", value: "normal", image: "/game/cupe.JPG" },
+  ] as GameOption[],
+};
+
+const stepPriceRange: GameStepType = {
+  id: "priceRange",
+  question: "What is your budget range?",
+  field: "priceRange",
+  options: [
+    { id: "p1", label: "Accessible", value: "budget", image: "/game/cupe.JPG" },
+    { id: "p2", label: "Mid Range", value: "mid", image: "/game/cupe.JPG" },
+    { id: "p3", label: "Luxury", value: "luxury", image: "/game/cupe.JPG" },
+  ] as GameOption[],
+};
+
+// Returns the non-color steps for each path
+const getNonColorSteps = (preferences: CustomerPreferences): GameStepType[] => {
+  const room = preferences.room as RoomType | null;
+
+  if (!room) return [];
+
+  if (room === "kitchen") {
+    return [stepKitchenType, stepHandles];
+  }
+
+  if (room === "drawers") {
+    const steps: GameStepType[] = [stepDoorType];
+    if (preferences.doorType === "normal") {
+      steps.push(stepHandles);
+    }
+    steps.push(stepPriceRange);
+    return steps;
+  }
+
+  if (room === "bathrooms") {
+    return [stepHandles, stepPriceRange];
+  }
+
+  if (room === "other") {
+    return [stepPriceRange];
+  }
+
+  return [];
+};
 
 const PreferenceGame: React.FC<PreferenceGameProps> = ({ onComplete }) => {
-  const [currentStep, setCurrentStep] = useState<number>(0);
   const [preferences, setPreferences] = useState<CustomerPreferences>({
-    category: null,
-    style: null,
-    priceRange: null,
+    ...emptyPreferences,
   });
+  const [stepIndex, setStepIndex] = useState<number>(0);
+  const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
   const [completed, setCompleted] = useState<boolean>(false);
 
-  const handleSelect = (value: string): void => {
-    const updatedPreferences: CustomerPreferences = { ...preferences };
+  const allSteps: GameStepType[] = [stepRoom, ...getNonColorSteps(preferences)];
+  const currentStep: GameStepType = allSteps[stepIndex];
 
-    if (currentStep === 0) {
-      updatedPreferences.category = value as CustomerPreferences["category"];
-    } else if (currentStep === 1) {
-      updatedPreferences.style = value as CustomerPreferences["style"];
-    } else if (currentStep === 2) {
-      updatedPreferences.priceRange = value as CustomerPreferences["priceRange"];
-    }
+  const handleSelect = (value: string): void => {
+    const updatedPreferences: CustomerPreferences = {
+      ...preferences,
+      [currentStep.field]: value,
+    };
 
     setPreferences(updatedPreferences);
 
+    const updatedSteps: GameStepType[] = [
+      stepRoom,
+      ...getNonColorSteps(updatedPreferences),
+    ];
+
     setTimeout(() => {
-      if (currentStep < steps.length - 1) {
-        setCurrentStep((prev) => prev + 1);
+      if (stepIndex < updatedSteps.length - 1) {
+        setStepIndex((prev) => prev + 1);
       } else {
-        setCompleted(true);
-        if (onComplete) {
-          onComplete(updatedPreferences);
-        }
+        // All non-color steps done — show color picker
+        setShowColorPicker(true);
       }
     }, 400);
   };
 
+  const handleColorComplete = (colors: [string, string]): void => {
+    const updatedPreferences: CustomerPreferences = {
+      ...preferences,
+      colors,
+    };
+    setPreferences(updatedPreferences);
+
+    setTimeout(() => {
+      setShowColorPicker(false);
+      setCompleted(true);
+      if (onComplete) {
+        onComplete(updatedPreferences);
+      }
+    }, 600);
+  };
+
   const getSelected = (): string | null => {
-    if (currentStep === 0) return preferences.category;
-    if (currentStep === 1) return preferences.style;
-    if (currentStep === 2) return preferences.priceRange;
-    return null;
+    const value = preferences[currentStep.field];
+    if (Array.isArray(value)) return null;
+    return value ?? null;
   };
 
   const handleRestart = (): void => {
-    setCurrentStep(0);
-    setPreferences({ category: null, style: null, priceRange: null });
+    setPreferences({ ...emptyPreferences });
+    setStepIndex(0);
+    setShowColorPicker(false);
     setCompleted(false);
   };
+
+  // Total steps = non-color steps + 1 color step
+  const totalSteps = allSteps.length + 1;
+  const currentStepNumber = showColorPicker ? allSteps.length + 1 : stepIndex + 1;
 
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center bg-charcoal overflow-hidden">
@@ -95,34 +181,38 @@ const PreferenceGame: React.FC<PreferenceGameProps> = ({ onComplete }) => {
       <div className="absolute right-12 top-0 h-full w-px bg-gold opacity-20"></div>
 
       {!completed ? (
-        <div className="w-full flex flex-col items-center justify-center flex-1">
+        <div className="w-full flex flex-col items-center justify-center flex-1 px-6">
 
-          {/* Step indicator */}
+          {/* Step progress bars */}
           <div className="flex gap-3 mb-12">
-            {steps.map((step: GameStepType, index: number) => (
+            {Array.from({ length: totalSteps }).map((_: unknown, index: number) => (
               <div
-                key={step.id}
+                key={index}
                 className={
                   "w-8 h-px transition-all duration-300 " +
-                  (index <= currentStep ? "bg-gold" : "bg-muted")
+                  (index < currentStepNumber ? "bg-gold" : "bg-muted")
                 }
               >
               </div>
             ))}
           </div>
 
-          {/* Current step */}
-          <GameStep
-            question={steps[currentStep].question}
-            options={steps[currentStep].options}
-            onSelect={handleSelect}
-            selected={getSelected()}
-          >
-          </GameStep>
+          {showColorPicker ? (
+            <ColorPicker onComplete={handleColorComplete}>
+            </ColorPicker>
+          ) : (
+            <GameStep
+              question={currentStep.question}
+              options={currentStep.options}
+              onSelect={handleSelect}
+              selected={getSelected()}
+            >
+            </GameStep>
+          )}
 
           {/* Step counter */}
           <p className="text-muted text-xs tracking-widest uppercase mt-12">
-            {currentStep + 1} / {steps.length}
+            {currentStepNumber} / {totalSteps}
           </p>
 
         </div>
@@ -139,42 +229,89 @@ const PreferenceGame: React.FC<PreferenceGameProps> = ({ onComplete }) => {
 
           <div className="gold-divider"></div>
 
-          <div className="flex gap-8 mt-8 text-center">
-            <div>
-              <p className="text-muted text-xs tracking-widest uppercase mb-1">
-                Room
-              </p>
-              <p className="text-cream text-sm capitalize">
-                {preferences.category}
-              </p>
-            </div>
-            <div>
-              <p className="text-muted text-xs tracking-widest uppercase mb-1">
-                Style
-              </p>
-              <p className="text-cream text-sm capitalize">
-                {preferences.style}
-              </p>
-            </div>
-            <div>
-              <p className="text-muted text-xs tracking-widest uppercase mb-1">
-                Budget
-              </p>
-              <p className="text-cream text-sm capitalize">
-                {preferences.priceRange}
-              </p>
-            </div>
+          <div className="flex flex-wrap justify-center gap-8 mt-8 text-center">
+            {preferences.room && (
+              <div>
+                <p className="text-muted text-xs tracking-widest uppercase mb-1">
+                  Room
+                </p>
+                <p className="text-cream text-sm capitalize">
+                  {preferences.room}
+                </p>
+              </div>
+            )}
+            {preferences.kitchenType && (
+              <div>
+                <p className="text-muted text-xs tracking-widest uppercase mb-1">
+                  Style
+                </p>
+                <p className="text-cream text-sm capitalize">
+                  {preferences.kitchenType}
+                </p>
+              </div>
+            )}
+            {preferences.doorType && (
+              <div>
+                <p className="text-muted text-xs tracking-widest uppercase mb-1">
+                  Doors
+                </p>
+                <p className="text-cream text-sm capitalize">
+                  {preferences.doorType}
+                </p>
+              </div>
+            )}
+            {preferences.handles && (
+              <div>
+                <p className="text-muted text-xs tracking-widest uppercase mb-1">
+                  Handles
+                </p>
+                <p className="text-cream text-sm capitalize">
+                  {preferences.handles}
+                </p>
+              </div>
+            )}
+            {preferences.priceRange && (
+              <div>
+                <p className="text-muted text-xs tracking-widest uppercase mb-1">
+                  Budget
+                </p>
+                <p className="text-cream text-sm capitalize">
+                  {preferences.priceRange}
+                </p>
+              </div>
+            )}
+            {preferences.colors && (
+              <div>
+                <p className="text-muted text-xs tracking-widest uppercase mb-2">
+                  Colors
+                </p>
+                <div className="flex gap-2 justify-center">
+                  <div
+                    className="w-6 h-6 border border-gold"
+                    style={{ backgroundColor: preferences.colors[0] }}
+                  >
+                  </div>
+                  <div
+                    className="w-6 h-6 border border-gold"
+                    style={{ backgroundColor: preferences.colors[1] }}
+                  >
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-            <a
-          
-            href="#catalog"
+
+          <a
+            href="#contact"
             onClick={(e) => {
               e.preventDefault();
-              document.querySelector("#catalog")?.scrollIntoView({ behavior: "smooth" });
+              document
+                .querySelector("#contact")
+                ?.scrollIntoView({ behavior: "smooth" });
             }}
             className="inline-block border border-gold text-gold text-xs tracking-[0.3em] uppercase px-10 py-4 hover:bg-gold hover:text-dark transition-all duration-500 mt-12"
           >
-            View Your Matches
+            Get In Touch
           </a>
 
           <button

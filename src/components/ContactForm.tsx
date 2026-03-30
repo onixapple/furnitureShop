@@ -75,32 +75,31 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
 
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center bg-dark overflow-hidden px-6">
-
+  
       {/* Gold line decorations */}
       <div className="absolute left-12 top-0 h-full w-px bg-gold opacity-20"></div>
       <div className="absolute right-12 top-0 h-full w-px bg-gold opacity-20"></div>
-
+  
       <div className="max-w-6xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
-
+  
         {/* Left — Heading */}
         <div className="flex flex-col">
           <p className="text-gold text-xs tracking-[0.4em] uppercase mb-4">
             Get In Touch
           </p>
-
+  
           <h2 className="font-serif text-5xl md:text-6xl text-cream font-light leading-tight mb-6">
             Let Us Find Your Perfect Piece
           </h2>
-
+  
           <div className="gold-divider" style={{ margin: "0 0 1.5rem 0" }}></div>
-
+  
           <p className="text-muted text-sm leading-relaxed tracking-wide mb-12">
             Whether you have a specific piece in mind or need guidance curating
             an entire space, our consultants are here to help. Reach out and we
             will respond within 24 hours.
           </p>
-
-          {/* Contact details */}
+  
           <div className="flex flex-col gap-6">
             <div>
               <p className="text-gold text-xs tracking-widest uppercase mb-1">
@@ -128,37 +127,62 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
             </div>
           </div>
         </div>
-
+  
         {/* Right — Form */}
         <div className="flex flex-col gap-6">
-
-          {/* Preferences summary if available */}
-          {preferences && (preferences.category || preferences.style || preferences.priceRange) && (
+  
+          {/* Preferences summary */}
+          {preferences && Object.values(preferences).some((v) => v !== null) && (
             <div className="border border-gold border-opacity-30 p-4 mb-2">
               <p className="text-gold text-xs tracking-widest uppercase mb-3">
                 Your Preferences
               </p>
-              <div className="flex gap-6">
-                {preferences.category && (
+              <div className="flex flex-wrap gap-6">
+  
+                {preferences.room && (
                   <div>
                     <p className="text-muted text-xs uppercase tracking-widest">
                       Room
                     </p>
                     <p className="text-cream text-xs capitalize mt-1">
-                      {preferences.category}
+                      {preferences.room}
                     </p>
                   </div>
                 )}
-                {preferences.style && (
+  
+                {preferences.kitchenType && (
                   <div>
                     <p className="text-muted text-xs uppercase tracking-widest">
                       Style
                     </p>
                     <p className="text-cream text-xs capitalize mt-1">
-                      {preferences.style}
+                      {preferences.kitchenType}
                     </p>
                   </div>
                 )}
+  
+                {preferences.doorType && (
+                  <div>
+                    <p className="text-muted text-xs uppercase tracking-widest">
+                      Doors
+                    </p>
+                    <p className="text-cream text-xs capitalize mt-1">
+                      {preferences.doorType}
+                    </p>
+                  </div>
+                )}
+  
+                {preferences.handles && (
+                  <div>
+                    <p className="text-muted text-xs uppercase tracking-widest">
+                      Handles
+                    </p>
+                    <p className="text-cream text-xs capitalize mt-1">
+                      {preferences.handles}
+                    </p>
+                  </div>
+                )}
+  
                 {preferences.priceRange && (
                   <div>
                     <p className="text-muted text-xs uppercase tracking-widest">
@@ -169,10 +193,31 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
                     </p>
                   </div>
                 )}
+  
+                {preferences.colors && (
+                  <div>
+                    <p className="text-muted text-xs uppercase tracking-widest">
+                      Colors
+                    </p>
+                    <div className="flex gap-2 mt-1">
+                      <div
+                        className="w-5 h-5 border border-gold"
+                        style={{ backgroundColor: preferences.colors[0] }}
+                      >
+                      </div>
+                      <div
+                        className="w-5 h-5 border border-gold"
+                        style={{ backgroundColor: preferences.colors[1] }}
+                      >
+                      </div>
+                    </div>
+                  </div>
+                )}
+  
               </div>
             </div>
           )}
-
+  
           {/* Name */}
           <div className="flex flex-col gap-2">
             <label className="text-muted text-xs tracking-widest uppercase">
@@ -188,7 +233,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
             >
             </input>
           </div>
-
+  
           {/* Email */}
           <div className="flex flex-col gap-2">
             <label className="text-muted text-xs tracking-widest uppercase">
@@ -204,7 +249,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
             >
             </input>
           </div>
-
+  
           {/* Message */}
           <div className="flex flex-col gap-2">
             <label className="text-muted text-xs tracking-widest uppercase">
@@ -220,7 +265,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
             >
             </textarea>
           </div>
-
+  
           {/* Submit */}
           <button
             onClick={handleSubmit}
@@ -234,26 +279,22 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
           >
             {status === "loading" ? "Sending..." : "Send Enquiry"}
           </button>
-
-          {/* Success message */}
+  
           {status === "success" && (
             <p className="text-gold text-xs tracking-widest uppercase text-center">
               ✓ Your message has been sent. We will be in touch shortly.
             </p>
           )}
-
-          {/* Error message */}
+  
           {status === "error" && (
             <p className="text-red-400 text-xs tracking-widest uppercase text-center">
               Something went wrong. Please try again.
             </p>
           )}
-
+  
         </div>
       </div>
-
     </div>
-  );
-};
+  )}
 
 export default ContactForm;

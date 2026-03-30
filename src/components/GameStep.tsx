@@ -29,26 +29,75 @@ const GameStep: React.FC<GameStepProps> = ({
 
       <div className="gold-divider"></div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 w-full max-w-4xl">
+      <div className="flex flex-wrap justify-center gap-4 mt-8 w-full max-w-4xl">
         {options.map((option: GameOption) => (
           <button
             key={option.id}
             onClick={() => onSelect(option.value)}
             className={
-              "flex flex-col items-center justify-center border px-6 py-8 transition-all duration-300 cursor-pointer " +
+              "overflow-hidden transition-all duration-300 cursor-pointer " +
               (selected === option.value
-                ? "border-gold bg-gold text-dark"
-                : "border-muted text-cream hover:border-gold hover:text-gold")
+                ? "ring-2 ring-gold scale-105"
+                : "ring-1 ring-muted hover:ring-gold hover:scale-105")
             }
+            style={{ width: "192px", height: "192px", position: "relative", display: "block" }}
           >
-            {option.icon && (
-              <span className="text-3xl mb-3">
-                {option.icon}
-              </span>
+
+            {/* Background image */}
+            <img
+              src={option.image}
+              alt={option.label}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+
+            {/* Dark overlay */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                backgroundColor: selected === option.value
+                  ? "rgba(15,15,15,0.3)"
+                  : "rgba(15,15,15,0.5)",
+                transition: "background-color 0.3s",
+              }}
+            >
+            </div>
+
+            {/* Selected gold border */}
+            {selected === option.value && (
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  border: "2px solid #C9A84C",
+                }}
+              >
+              </div>
             )}
-            <span className="text-xs tracking-widest uppercase">
-              {option.label}
-            </span>
+
+            {/* Label */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                padding: "12px",
+                background: "linear-gradient(to top, rgba(15,15,15,0.9), transparent)",
+              }}
+            >
+              <span className="text-cream text-xs tracking-widest uppercase">
+                {option.label}
+              </span>
+            </div>
+
           </button>
         ))}
       </div>

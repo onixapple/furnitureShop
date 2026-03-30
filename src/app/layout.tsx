@@ -3,8 +3,8 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
-  title: "Maison — Luxury Furniture",
-  description: "Discover handcrafted luxury furniture for your home.",
+  title: "Teomob — Mobila la Comanda",
+  description: "Descopera solutii perfecte pentru orice necesitate.",
 };
 
 export default function RootLayout({
