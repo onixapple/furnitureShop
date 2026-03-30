@@ -1,17 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GameStep from "@/components/GameStep";
 import ColorPicker from "@/components/ColorPicker";
+import DimensionsStep from "@/components/DimensionsStep";
 import {
   CustomerPreferences,
   GameStep as GameStepType,
   GameOption,
   RoomType,
+  Dimensions,
 } from "@/types";
 
 interface PreferenceGameProps {
   onComplete?: (preferences: CustomerPreferences) => void;
+  onRestart?: () => void;
 }
 
 const emptyPreferences: CustomerPreferences = {
@@ -25,117 +28,132 @@ const emptyPreferences: CustomerPreferences = {
 
 const stepRoom: GameStepType = {
   id: "room",
-  question: "What are you looking for?",
+  question: "De ce mobila aveti nevoie?",
   field: "room",
   options: [
-    { id: "r1", label: "Kitchen", value: "kitchen", image: "/game/cupe.JPG" },
-    { id: "r2", label: "Drawers", value: "drawers", image: "/game/simplu.jpg" },
-    { id: "r3", label: "Bathroom", value: "bathrooms", image: "/game/cupe.JPG" },
-    { id: "r4", label: "Something Else", value: "other", image: "/game/cupe.JPG" },
+    { id: "r1", label: "Bucatarii", value: "bucatarie", image: "/game/cupe.JPG" },
+    { id: "r2", label: "Dulapuri", value: "dulapuri", image: "/game/simplu.jpg" },
+    { id: "r3", label: "Living", value: "living", image: "/game/cupe.JPG" },
+    { id: "r4", label: "Altele", value: "altele", image: "/game/cupe.JPG" },
   ] as GameOption[],
 };
 
 const stepKitchenType: GameStepType = {
   id: "kitchenType",
-  question: "Which kitchen style suits you?",
+  question: "Ce tip de bucatarie preferati?",
   field: "kitchenType",
   options: [
-    { id: "kt1", label: "Classic", value: "classic", image: "/game/cupe.JPG" },
-    { id: "kt2", label: "Modern", value: "modern", image: "/game/cupe.JPG" },
+    { id: "kt1", label: "Clasica", value: "classic", image: "/game/cupe.JPG" },
+    { id: "kt2", label: "Moderna", value: "modern", image: "/game/cupe.JPG" },
   ] as GameOption[],
 };
 
 const stepHandles: GameStepType = {
   id: "handles",
-  question: "Visible or hidden handles?",
+  question: "Ce tipuri de manere vi se par mai atragatoare?",
   field: "handles",
   options: [
-    { id: "h1", label: "Visible Handles", value: "visible", image: "/game/cupe.JPG" },
-    { id: "h2", label: "Hidden Handles", value: "hidden", image: "/game/cupe.JPG" },
+    { id: "h1", label: "Manere vizibile", value: "vizibile", image: "/game/cupe.JPG" },
+    { id: "h2", label: "Manere ascunse", value: "ascunse", image: "/game/cupe.JPG" },
   ] as GameOption[],
 };
 
 const stepDoorType: GameStepType = {
   id: "doorType",
-  question: "How should the doors open?",
+  question: "Ce tip de dulap preferati?",
   field: "doorType",
   options: [
-    { id: "d1", label: "Sliding Doors", value: "sliding", image: "/game/cupe.JPG" },
-    { id: "d2", label: "Normal Opening", value: "normal", image: "/game/cupe.JPG" },
+    { id: "d1", label: "Usi glisante", value: "glisante", image: "/game/cupe.JPG" },
+    { id: "d2", label: "Usi pe balamale", value: "balamale", image: "/game/cupe.JPG" },
   ] as GameOption[],
 };
 
 const stepPriceRange: GameStepType = {
   id: "priceRange",
-  question: "What is your budget range?",
+  question: "Care este bugetul dumneavoastra?",
   field: "priceRange",
   options: [
-    { id: "p1", label: "Accessible", value: "budget", image: "/game/cupe.JPG" },
-    { id: "p2", label: "Mid Range", value: "mid", image: "/game/cupe.JPG" },
-    { id: "p3", label: "Luxury", value: "luxury", image: "/game/cupe.JPG" },
+    { id: "p1", label: "Accesibil", value: "budget", image: "/game/cupe.JPG" },
+    { id: "p2", label: "Mediu", value: "mid", image: "/game/cupe.JPG" },
+    { id: "p3", label: "Lux", value: "luxury", image: "/game/cupe.JPG" },
   ] as GameOption[],
 };
 
-// Returns the non-color steps for each path
-const getNonColorSteps = (preferences: CustomerPreferences): GameStepType[] => {
-  const room = preferences.room as RoomType | null;
+// Single getNonColorSteps — outside the component, uses correct values
+const getStepsForPreferences = (prefs: CustomerPreferences): GameStepType[] => {
+  const base: GameStepType[] = [stepRoom];
+  const room = prefs.room;
 
-  if (!room) return [];
-
-  if (room === "kitchen") {
-    return [stepKitchenType, stepHandles];
+  if (room === "bucatarie") {
+    base.push(stepKitchenType);
+    base.push(stepHandles);
+    base.push(stepPriceRange);
   }
 
-  if (room === "drawers") {
-    const steps: GameStepType[] = [stepDoorType];
-    if (preferences.doorType === "normal") {
-      steps.push(stepHandles);
+  if (room === "dulapuri") {
+    base.push(stepDoorType);
+    if (prefs.doorType === "balamale") {
+      base.push(stepHandles);
     }
-    steps.push(stepPriceRange);
-    return steps;
+    base.push(stepPriceRange);
   }
 
-  if (room === "bathrooms") {
-    return [stepHandles, stepPriceRange];
-  }
-
-  if (room === "other") {
-    return [stepPriceRange];
-  }
-
-  return [];
+  return base;
 };
 
-const PreferenceGame: React.FC<PreferenceGameProps> = ({ onComplete }) => {
+const PreferenceGame: React.FC<PreferenceGameProps> = ({ onComplete, onRestart }) => {
   const [preferences, setPreferences] = useState<CustomerPreferences>({
     ...emptyPreferences,
   });
   const [stepIndex, setStepIndex] = useState<number>(0);
   const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
+  const [showDimensionsStep, setShowDimensionsStep] = useState<boolean>(false);
   const [completed, setCompleted] = useState<boolean>(false);
 
-  const allSteps: GameStepType[] = [stepRoom, ...getNonColorSteps(preferences)];
-  const currentStep: GameStepType = allSteps[stepIndex];
+  const allSteps = getStepsForPreferences(preferences);
+const currentStep: GameStepType = allSteps[stepIndex] ?? stepRoom;
+
+  console.log("stepIndex:", stepIndex);
+console.log("allSteps:", allSteps.map(s => s.id));
+console.log("currentStep:", currentStep.id);
+console.log("preferences.room:", preferences.room);
+console.log("preferences.doorType:", preferences.doorType);
+  useEffect(() => {
+    if (completed) {
+      const catalog = document.querySelector("#catalog");
+      if (catalog) {
+        catalog.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [completed]);
 
   const handleSelect = (value: string): void => {
     const updatedPreferences: CustomerPreferences = {
       ...preferences,
       [currentStep.field]: value,
     };
-
+  
     setPreferences(updatedPreferences);
-
-    const updatedSteps: GameStepType[] = [
-      stepRoom,
-      ...getNonColorSteps(updatedPreferences),
-    ];
-
+  
+    if (currentStep.field === "room" && (value === "living" || value === "altele")) {
+      setTimeout(() => {
+        setCompleted(true);
+        if (onComplete) {
+          onComplete(updatedPreferences);
+        }
+      }, 400);
+      return;
+    }
+  
+    const updatedSteps = getStepsForPreferences(updatedPreferences);
+    const nextIndex = stepIndex + 1;
+    const isLastStep = nextIndex >= updatedSteps.length;
+  
     setTimeout(() => {
-      if (stepIndex < updatedSteps.length - 1) {
-        setStepIndex((prev) => prev + 1);
-      } else {
-        // All non-color steps done — show color picker
+      if (isLastStep) {
         setShowColorPicker(true);
+      } else {
+        setStepIndex(nextIndex);
       }
     }, 400);
   };
@@ -149,16 +167,27 @@ const PreferenceGame: React.FC<PreferenceGameProps> = ({ onComplete }) => {
 
     setTimeout(() => {
       setShowColorPicker(false);
-      setCompleted(true);
-      if (onComplete) {
-        onComplete(updatedPreferences);
-      }
+      setShowDimensionsStep(true);
     }, 600);
+  };
+
+  const handleDimensionsComplete = (dimensions: Dimensions | null): void => {
+    const updatedPreferences: CustomerPreferences = {
+      ...preferences,
+      dimensions: dimensions ?? undefined,
+    };
+    setPreferences(updatedPreferences);
+    setShowDimensionsStep(false);
+    setCompleted(true);
+    if (onComplete) {
+      onComplete(updatedPreferences);
+    }
   };
 
   const getSelected = (): string | null => {
     const value = preferences[currentStep.field];
     if (Array.isArray(value)) return null;
+    if (typeof value === "object" && value !== null) return null;
     return value ?? null;
   };
 
@@ -166,24 +195,29 @@ const PreferenceGame: React.FC<PreferenceGameProps> = ({ onComplete }) => {
     setPreferences({ ...emptyPreferences });
     setStepIndex(0);
     setShowColorPicker(false);
+    setShowDimensionsStep(false);
     setCompleted(false);
+    if (onRestart) {
+      onRestart();
+    }
   };
 
-  // Total steps = non-color steps + 1 color step
-  const totalSteps = allSteps.length + 1;
-  const currentStepNumber = showColorPicker ? allSteps.length + 1 : stepIndex + 1;
+  const totalSteps = allSteps.length + 2;
+  const currentStepNumber = showDimensionsStep
+    ? allSteps.length + 2
+    : showColorPicker
+    ? allSteps.length + 1
+    : stepIndex + 1;
 
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center bg-charcoal overflow-hidden">
 
-      {/* Gold line decorations */}
       <div className="absolute left-12 top-0 h-full w-px bg-gold opacity-20"></div>
       <div className="absolute right-12 top-0 h-full w-px bg-gold opacity-20"></div>
 
       {!completed ? (
         <div className="w-full flex flex-col items-center justify-center flex-1 px-6">
 
-          {/* Step progress bars */}
           <div className="flex gap-3 mb-12">
             {Array.from({ length: totalSteps }).map((_: unknown, index: number) => (
               <div
@@ -200,6 +234,9 @@ const PreferenceGame: React.FC<PreferenceGameProps> = ({ onComplete }) => {
           {showColorPicker ? (
             <ColorPicker onComplete={handleColorComplete}>
             </ColorPicker>
+          ) : showDimensionsStep ? (
+            <DimensionsStep onComplete={handleDimensionsComplete}>
+            </DimensionsStep>
           ) : (
             <GameStep
               question={currentStep.question}
@@ -210,7 +247,6 @@ const PreferenceGame: React.FC<PreferenceGameProps> = ({ onComplete }) => {
             </GameStep>
           )}
 
-          {/* Step counter */}
           <p className="text-muted text-xs tracking-widest uppercase mt-12">
             {currentStepNumber} / {totalSteps}
           </p>
@@ -220,11 +256,11 @@ const PreferenceGame: React.FC<PreferenceGameProps> = ({ onComplete }) => {
         <div className="flex flex-col items-center justify-center text-center px-6">
 
           <p className="text-gold text-xs tracking-[0.4em] uppercase mb-4">
-            Your Profile
+            Profilul Tau
           </p>
 
           <h2 className="font-serif text-5xl text-cream font-light mb-4">
-            Perfect. We Know Just What You Need.
+            Perfect. Stim exact ce va trebuie.
           </h2>
 
           <div className="gold-divider"></div>
@@ -233,7 +269,7 @@ const PreferenceGame: React.FC<PreferenceGameProps> = ({ onComplete }) => {
             {preferences.room && (
               <div>
                 <p className="text-muted text-xs tracking-widest uppercase mb-1">
-                  Room
+                  Tip
                 </p>
                 <p className="text-cream text-sm capitalize">
                   {preferences.room}
@@ -243,7 +279,7 @@ const PreferenceGame: React.FC<PreferenceGameProps> = ({ onComplete }) => {
             {preferences.kitchenType && (
               <div>
                 <p className="text-muted text-xs tracking-widest uppercase mb-1">
-                  Style
+                  Stil
                 </p>
                 <p className="text-cream text-sm capitalize">
                   {preferences.kitchenType}
@@ -253,7 +289,7 @@ const PreferenceGame: React.FC<PreferenceGameProps> = ({ onComplete }) => {
             {preferences.doorType && (
               <div>
                 <p className="text-muted text-xs tracking-widest uppercase mb-1">
-                  Doors
+                  Usi
                 </p>
                 <p className="text-cream text-sm capitalize">
                   {preferences.doorType}
@@ -263,7 +299,7 @@ const PreferenceGame: React.FC<PreferenceGameProps> = ({ onComplete }) => {
             {preferences.handles && (
               <div>
                 <p className="text-muted text-xs tracking-widest uppercase mb-1">
-                  Handles
+                  Manere
                 </p>
                 <p className="text-cream text-sm capitalize">
                   {preferences.handles}
@@ -283,7 +319,7 @@ const PreferenceGame: React.FC<PreferenceGameProps> = ({ onComplete }) => {
             {preferences.colors && (
               <div>
                 <p className="text-muted text-xs tracking-widest uppercase mb-2">
-                  Colors
+                  Culori
                 </p>
                 <div className="flex gap-2 justify-center">
                   <div
@@ -299,26 +335,36 @@ const PreferenceGame: React.FC<PreferenceGameProps> = ({ onComplete }) => {
                 </div>
               </div>
             )}
+            {preferences.dimensions && (preferences.dimensions.width || preferences.dimensions.height) && (
+              <div>
+                <p className="text-muted text-xs tracking-widest uppercase mb-1">
+                  Dimensiuni
+                </p>
+                <p className="text-cream text-sm">
+                  {preferences.dimensions.width ? `W: ${preferences.dimensions.width}cm` : ""}
+                  {preferences.dimensions.width && preferences.dimensions.height ? " × " : ""}
+                  {preferences.dimensions.height ? `H: ${preferences.dimensions.height}cm` : ""}
+                </p>
+              </div>
+            )}
           </div>
-
           <a
+          
             href="#contact"
             onClick={(e) => {
               e.preventDefault();
-              document
-                .querySelector("#contact")
-                ?.scrollIntoView({ behavior: "smooth" });
+              document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
             }}
             className="inline-block border border-gold text-gold text-xs tracking-[0.3em] uppercase px-10 py-4 hover:bg-gold hover:text-dark transition-all duration-500 mt-12"
           >
-            Get In Touch
+            Contactati-ne
           </a>
 
           <button
             onClick={handleRestart}
             className="text-muted text-xs tracking-widest uppercase mt-6 hover:text-gold transition-colors duration-300"
           >
-            Start Over
+            Incepe din nou
           </button>
 
         </div>

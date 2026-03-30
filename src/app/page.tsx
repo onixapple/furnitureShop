@@ -22,6 +22,17 @@ export default function Home() {
     setPreferences(result);
   };
 
+  const handleGameRestart = (): void => {
+    setPreferences({
+      room: null,
+      kitchenType: null,
+      handles: null,
+      doorType: null,
+      colors: null,
+      priceRange: null,
+    });
+  };
+
   return (
     <main className="h-screen overflow-y-scroll">
       <section id="hero">
@@ -29,11 +40,14 @@ export default function Home() {
       </section>
 
       <section id="game">
-        <PreferenceGame onComplete={handleGameComplete} />
-      </section>
-    
+  <PreferenceGame
+    onComplete={handleGameComplete}
+    onRestart={handleGameRestart}
+  />
+</section>
+
       <section id="catalog">
-        <ProductCatalog />
+        <ProductCatalog preferences={preferences} />
       </section>
 
       <section id="about">

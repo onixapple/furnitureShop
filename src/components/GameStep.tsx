@@ -20,7 +20,7 @@ const GameStep: React.FC<GameStepProps> = ({
     <div className="flex flex-col items-center justify-center w-full h-full px-6">
 
       <p className="text-gold text-xs tracking-[0.4em] uppercase mb-4">
-        Tell Us Your Taste
+        
       </p>
 
       <h2 className="font-serif text-4xl md:text-5xl text-cream font-light text-center mb-4">

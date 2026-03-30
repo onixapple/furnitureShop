@@ -8,6 +8,7 @@ export interface Product {
   imageUrl: string;
   description: string;
   featured: boolean;
+  handles: string | null;
 }
 
 // Game option shown as a button
@@ -35,6 +36,7 @@ export interface CustomerPreferences {
   colors: [string, string] | null;
   priceRange: PriceRange | null;
   description?: string;
+  dimensions?: Dimensions;
 }
 
 // Contact form payload
@@ -52,12 +54,16 @@ export interface EmailPayload {
   message: string;
   preferences?: CustomerPreferences;
 }
+export interface Dimensions {
+  width: string;
+  height: string;
+}
 
 // Enums
 export type ProductCategory = "bucatarii" | "dulapuri" | "mese" | "antreuri" | "altele";
 export type ProductStyle = "modern" | "classic" | "scandinavian" | "industrial";
 export type PriceRange = "budget" | "mid" | "luxury";
-export type RoomType = "kitchen" | "drawers" | "bathrooms" | "other";
+export type RoomType = "bucatarie" | "dulapuri" | "livinguri" | "altele";
 export type KitchenType = "classic" | "modern";
-export type HandleType = "visible" | "hidden";
-export type DoorType = "sliding" | "normal";
+export type HandleType = "vizibile" | "ascunse";
+export type DoorType = "glisante" | "balamale";
