@@ -36,7 +36,7 @@ const stepRoom: GameStepType = {
       id: "r1",
       label: "Bucatarii",
       value: "bucatarie",
-      image: "/game/bucatarie1.JPG",
+      image: "/game/bucatarie1.jpg",
     },
     {
       id: "r2",
