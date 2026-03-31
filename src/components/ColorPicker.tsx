@@ -1,215 +1,255 @@
 "use client";
 
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
+import { Material, MaterialSelection } from "@/types";
+
+interface MaterialOption {
+  name: string;
+  image: string;
+}
+
+const palOptions: MaterialOption[] = [
+  { name: "Hansa beige", image: "/materials/pal/119.jpg" },
+  { name: "Graphite", image: "/materials/pal/162.jpg" },
+  { name: "Anthracite", image: "/materials/pal/164.jpg" },
+  { name: "Summerrain grey", image: "/materials/pal/171.jpg" },
+  { name: "Black", image: "/materials/pal/190.png" },
+  { name: "Vanilla", image: "/materials/pal/1301.png" },
+  { name: "Olive", image: "/materials/pal/2508.jpg" },
+  { name: "Capuccino", image: "/materials/pal/3053.jpg" },
+  { name: "Lava grey", image: "/materials/pal/3057.jpg" },
+  { name: "Praline", image: "/materials/pal/3062.jpg" },
+  { name: "Toffee", image: "/materials/pal/3188.jpg" },
+  { name: "Jasmine", image: "/materials/pal/3266.jpg" },
+  { name: "Lemon Grass", image: "/materials/pal/6931.jpg" },
+  { name: "Cashmere", image: "/materials/pal/6933.jpg" },
+  { name: "Nymphaea alba", image: "/materials/pal/8681.jpg" },
+];
+
+const mdfOptions: MaterialOption[] = [
+  { name: "AGT 368", image: "/materials/mdf/AGT368.jpg" },
+  { name: "AGT 388", image: "/materials/mdf/AGT388.jpg" },
+  { name: "AGT 389", image: "/materials/mdf/AGT389.jpg" },
+  { name: "AGT 391", image: "/materials/mdf/AGT391.jpg" },
+  { name: "AGT 397", image: "/materials/mdf/AGT397.jpg" },
+  { name: "AGT 723", image: "/materials/mdf/AGT723.jpg" },
+  { name: "AGT 729", image: "/materials/mdf/AGT729.jpg" },
+  { name: "AGT 730", image: "/materials/mdf/AGT730.jpg" },
+  { name: "AGT 732", image: "/materials/mdf/AGT732.jpg" },
+  { name: "AGT 734", image: "/materials/mdf/AGT734.jpg" },
+  { name: "AGT 3032", image: "/materials/mdf/AGT3032.jpg" },
+  { name: "AGT 6008", image: "/materials/mdf/AGT6008.jpg" },
+  { name: "AGT 6018", image: "/materials/mdf/AGT6018.jpg" },
+  { name: "AGT 6019", image: "/materials/mdf/AGT6019.jpg" },
+  { name: "AGT 633", image: "/materials/mdf/AGT633.jpg" },
+  { name: "AGT 677", image: "/materials/mdf/AGT677.jpg" },
+  { name: "AGT 678", image: "/materials/mdf/AGT678.jpg" },
+  { name: "AGT 735", image: "/materials/mdf/AGT735.jpg" },
+  { name: "AGT 736", image: "/materials/mdf/AGT736.jpg" },
+  { name: "AGT 738", image: "/materials/mdf/AGT738.jpg" },
+];
 
 interface ColorPickerProps {
-  onComplete: (colors: [string, string]) => void;
+  onComplete: (materials: MaterialSelection) => void;
 }
 
 const ColorPicker: React.FC<ColorPickerProps> = ({ onComplete }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [selectedColors, setSelectedColors] = useState<string[]>([]);
-  const [hoveredColor, setHoveredColor] = useState<string | null>(null);
+  const [selectedPal, setSelectedPal] = useState<Material | null>(null);
+  const [selectedMdf, setSelectedMdf] = useState<Material | null>(null);
 
-  const drawSpectrum = useCallback((): void => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+  const handleSelectPal = (option: MaterialOption): void => {
+    const material: Material = { name: option.name, image: option.image };
+    setSelectedPal(material);
+  };
 
-    const width = canvas.width;
-    const height = canvas.height;
-
-    // Draw horizontal rainbow gradient
-    const hueGradient = ctx.createLinearGradient(0, 0, width, 0);
-    hueGradient.addColorStop(0, "hsl(0, 100%, 50%)");
-    hueGradient.addColorStop(0.17, "hsl(60, 100%, 50%)");
-    hueGradient.addColorStop(0.33, "hsl(120, 100%, 50%)");
-    hueGradient.addColorStop(0.5, "hsl(180, 100%, 50%)");
-    hueGradient.addColorStop(0.67, "hsl(240, 100%, 50%)");
-    hueGradient.addColorStop(0.83, "hsl(300, 100%, 50%)");
-    hueGradient.addColorStop(1, "hsl(360, 100%, 50%)");
-
-    ctx.fillStyle = hueGradient;
-    ctx.fillRect(0, 0, width, height);
-
-    // Draw vertical white to transparent gradient on top
-    const whiteGradient = ctx.createLinearGradient(0, 0, 0, height / 2);
-    whiteGradient.addColorStop(0, "rgba(255,255,255,1)");
-    whiteGradient.addColorStop(1, "rgba(255,255,255,0)");
-    ctx.fillStyle = whiteGradient;
-    ctx.fillRect(0, 0, width, height / 2);
-
-    // Draw vertical transparent to black gradient on bottom
-    const blackGradient = ctx.createLinearGradient(0, height / 2, 0, height);
-    blackGradient.addColorStop(0, "rgba(0,0,0,0)");
-    blackGradient.addColorStop(1, "rgba(0,0,0,1)");
-    ctx.fillStyle = blackGradient;
-    ctx.fillRect(0, height / 2, width, height / 2);
-  }, []);
+  const handleSelectMdf = (option: MaterialOption): void => {
+    const material: Material = { name: option.name, image: option.image };
+    setSelectedMdf(material);
+  };
 
   useEffect(() => {
-    drawSpectrum();
-  }, [drawSpectrum]);
-
-  const getColorAtPosition = (
-    e: React.MouseEvent<HTMLCanvasElement>
-  ): string | null => {
-    const canvas = canvasRef.current;
-    if (!canvas) return null;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return null;
-
-    const rect = canvas.getBoundingClientRect();
-    const x = Math.floor((e.clientX - rect.left) * (canvas.width / rect.width));
-    const y = Math.floor((e.clientY - rect.top) * (canvas.height / rect.height));
-    const pixel = ctx.getImageData(x, y, 1, 1).data;
-
-    return `#${pixel[0].toString(16).padStart(2, "0")}${pixel[1]
-      .toString(16)
-      .padStart(2, "0")}${pixel[2].toString(16).padStart(2, "0")}`;
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>): void => {
-    const color = getColorAtPosition(e);
-    if (color) setHoveredColor(color);
-  };
-
-  const handleMouseLeave = (): void => {
-    setHoveredColor(null);
-  };
-
-  const handleClick = (e: React.MouseEvent<HTMLCanvasElement>): void => {
-    const color = getColorAtPosition(e);
-    if (!color) return;
+    setSelectedPal({ name: palOptions[0].name, image: palOptions[0].image });
+    setSelectedMdf({ name: mdfOptions[0].name, image: mdfOptions[0].image });
+  }, []);
   
-    setSelectedColors((prev) => {
-      if (prev.length === 0) return [color];
-      if (prev.length === 1) {
-        const updated: [string, string] = [prev[0], color];
-        setTimeout(() => {
-          onComplete(updated);
-        }, 0);
-        return updated;
-      }
-      return [color];
-    });
-  };
-
-  const handleReset = (): void => {
-    setSelectedColors([]);
+  const handleContinue = (): void => {
+    setTimeout(() => {
+      onComplete({
+        pal: selectedPal,
+        mdf: selectedMdf,
+      });
+    }, 0);
   };
 
   return (
-    <div className="flex flex-col items-center gap-6 w-full max-w-2xl">
-
-      <p className="text-gold text-xs tracking-[0.4em] uppercase">
-        Tell Us Your Taste
-      </p>
-
-      <h2 className="font-serif text-4xl md:text-5xl text-cream font-light text-center">
-        Pick Your Two Colors
-      </h2>
-
-      <div className="gold-divider"></div>
-
-      <p className="text-muted text-xs tracking-widest uppercase">
-        {selectedColors.length === 0 && "Click to select your first color"}
-        {selectedColors.length === 1 && "Now select your second color"}
-        {selectedColors.length === 2 && "Perfect combination selected"}
-      </p>
-
-      {/* Canvas spectrum */}
-      <canvas
-        ref={canvasRef}
-        width={600}
-        height={300}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        onClick={handleClick}
-        className="w-full rounded-none cursor-crosshair border border-muted hover:border-gold transition-colors duration-300"
-        style={{ maxWidth: "600px" }}
-      >
-      </canvas>
-
-      {/* Color preview row */}
-      <div className="flex items-center gap-6 mt-2">
-
-        {/* Hovered color preview */}
-        <div className="flex flex-col items-center gap-2">
-          <div
-            className="w-10 h-10 border border-muted transition-all duration-100"
-            style={{ backgroundColor: hoveredColor ?? "transparent" }}
-          >
-          </div>
-          <p className="text-muted text-xs tracking-widest uppercase">
-            {hoveredColor ?? "—"}
-          </p>
-        </div>
-
-        <div className="w-px h-12 bg-muted opacity-30"></div>
-
-        {/* Selected color 1 */}
-        <div className="flex flex-col items-center gap-2">
-          <div
-            className={
-              "w-10 h-10 border transition-all duration-300 " +
-              (selectedColors[0] ? "border-gold" : "border-muted opacity-30")
-            }
-            style={{ backgroundColor: selectedColors[0] ?? "transparent" }}
-          >
-          </div>
-          <p className="text-muted text-xs tracking-widest uppercase">
-            {selectedColors[0] ?? "Color 1"}
-          </p>
-        </div>
-
-        {/* Selected color 2 */}
-        <div className="flex flex-col items-center gap-2">
-          <div
-            className={
-              "w-10 h-10 border transition-all duration-300 " +
-              (selectedColors[1] ? "border-gold" : "border-muted opacity-30")
-            }
-            style={{ backgroundColor: selectedColors[1] ?? "transparent" }}
-          >
-          </div>
-          <p className="text-muted text-xs tracking-widest uppercase">
-            {selectedColors[1] ?? "Color 2"}
-          </p>
-        </div>
-
-        <div className="w-px h-12 bg-muted opacity-30"></div>
-
-        {/* Combined preview */}
-        <div className="flex flex-col items-center gap-2">
-          <div
-            className="w-10 h-10 border border-muted"
-            style={{
-              background:
-                selectedColors.length === 2
-                  ? `linear-gradient(135deg, ${selectedColors[0]} 50%, ${selectedColors[1]} 50%)`
-                  : "transparent",
-            }}
-          >
-          </div>
-          <p className="text-muted text-xs tracking-widest uppercase">
-            Combo
-          </p>
-        </div>
-
+    <div className="w-full h-full flex flex-col overflow-hidden">
+      {/* Title */}
+      <div className="text-center py-6 px-6">
+        <p className="text-gold text-xs tracking-[0.4em] uppercase mb-2">
+          Alegeti Materialele
+        </p>
+        <h2 className="font-serif text-3xl text-cream font-light">
+          Selectati culoarea dorita
+        </h2>
+        <div className="gold-divider"></div>
       </div>
 
-      {/* Reset button */}
-      {selectedColors.length > 0 && (
-        <button
-          onClick={handleReset}
-          className="text-muted text-xs tracking-widest uppercase hover:text-gold transition-colors duration-300"
-        >
-          Reset Colors
-        </button>
-      )}
+      {/* Two columns */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* PAL column */}
+        <div className="flex-1 flex flex-col border-r border-gold border-opacity-20 overflow-hidden">
+          {/* PAL Header */}
+          <div
+  className="px-6 py-4 border-b border-gold border-opacity-10 relative overflow-hidden"
+  style={{
+    backgroundImage: selectedPal ? `url(${selectedPal.image})` : "none",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  }}
+>
+  {/* Dark overlay so text stays readable */}
+  {selectedPal && (
+  <div
+    className="absolute inset-0"
+    style={{ backgroundColor: "rgba(15,15,15,0.2)" }}
+  >
+  </div>
+)}
 
+  <div className="relative z-10">
+    <h3 className="font-serif text-2xl text-gold font-light">
+      PAL
+    </h3>
+    <p className="text-muted text-xs tracking-widest uppercase mt-1">
+      Material pentru corpus
+    </p>
+    {selectedPal && (
+      <p className="text-cream text-xs tracking-widest mt-1">
+        {selectedPal.name}
+      </p>
+    )}
+  </div>
+
+</div>
+
+          {/* PAL Grid */}
+          <div
+            className="overflow-y-auto p-4"
+            style={{ maxHeight: "calc(100% - 100px)" }}
+          >
+            <div className="grid grid-cols-5 gap-2">
+              {palOptions.map((option: MaterialOption) => (
+                <button
+                  key={option.name}
+                  onClick={() => handleSelectPal(option)}
+                  className="flex flex-col items-center gap-1 p-0 transition-all duration-200"
+                  style={{
+                    border:
+                      selectedPal?.name === option.name
+                        ? "2px solid #C9A84C"
+                        : "2px solid transparent",
+                  }}
+                >
+                  <img
+                    src={option.image}
+                    alt={option.name}
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      objectFit: "cover",
+                    }}
+                  />
+                  <span className="text-cream text-xs tracking-wide text-center leading-tight">
+                    {option.name}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* MDF column */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* MDF Header */}
+          <div
+  className="px-6 py-4 border-b border-gold border-opacity-10 relative overflow-hidden"
+  style={{
+    backgroundImage: selectedMdf ? `url(${selectedMdf.image})` : "none",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  }}
+>
+  {/* Dark overlay so text stays readable */}
+  {selectedMdf && (
+  <div
+    className="absolute inset-0"
+    style={{ backgroundColor: "rgba(15,15,15,0.2)" }}
+  >
+  </div>
+)}
+
+  <div className="relative z-10">
+    <h3 className="font-serif text-2xl text-gold font-light">
+      MDF
+    </h3>
+    <p className="text-muted text-xs tracking-widest uppercase mt-1">
+      Material pentru fasade
+    </p>
+    {selectedMdf && (
+      <p className="text-cream text-xs tracking-widest mt-1">
+        {selectedMdf.name}
+      </p>
+    )}
+  </div>
+
+</div>
+
+          {/* MDF Grid */}
+          <div
+            className="overflow-y-auto p-4"
+            style={{ maxHeight: "calc(100% - 100px)" }}
+          >
+            <div className="grid grid-cols-5 gap-2">
+              {mdfOptions.map((option: MaterialOption) => (
+                <button
+                  key={option.name}
+                  onClick={() => handleSelectMdf(option)}
+                  className="flex flex-col items-center gap-1 p-0 transition-all duration-200"
+                  style={{
+                    border:
+                      selectedMdf?.name === option.name
+                        ? "2px solid #C9A84C"
+                        : "2px solid transparent",
+                  }}
+                >
+                  <img
+                    src={option.image}
+                    alt={option.name}
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      objectFit: "cover",
+                    }}
+                  />
+                  <span className="text-cream text-xs tracking-wide text-center leading-tight">
+                    {option.name}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Continue / Skip button */}
+      <div className="flex justify-center gap-6 py-4 border-t border-gold border-opacity-10">
+        <button
+          onClick={handleContinue}
+          className="border border-gold text-gold text-xs tracking-[0.3em] uppercase px-10 py-3 hover:bg-gold hover:text-dark transition-all duration-500"
+        >
+          {selectedPal || selectedMdf ? "Continuati" : "Omiteti"}
+        </button>
+      </div>
     </div>
   );
 };

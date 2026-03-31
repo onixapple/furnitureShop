@@ -10,6 +10,7 @@ import {
   GameOption,
   RoomType,
   Dimensions,
+  MaterialSelection,
 } from "@/types";
 
 interface PreferenceGameProps {
@@ -22,7 +23,7 @@ const emptyPreferences: CustomerPreferences = {
   kitchenType: null,
   handles: null,
   doorType: null,
-  colors: null,
+  materials: null,
   priceRange: null,
 };
 
@@ -31,8 +32,18 @@ const stepRoom: GameStepType = {
   question: "De ce mobila aveti nevoie?",
   field: "room",
   options: [
-    { id: "r1", label: "Bucatarii", value: "bucatarie", image: "/game/cupe.JPG" },
-    { id: "r2", label: "Dulapuri", value: "dulapuri", image: "/game/simplu.jpg" },
+    {
+      id: "r1",
+      label: "Bucatarii",
+      value: "bucatarie",
+      image: "/game/cupe.JPG",
+    },
+    {
+      id: "r2",
+      label: "Dulapuri",
+      value: "dulapuri",
+      image: "/game/simplu.jpg",
+    },
     { id: "r3", label: "Living", value: "living", image: "/game/cupe.JPG" },
     { id: "r4", label: "Altele", value: "altele", image: "/game/cupe.JPG" },
   ] as GameOption[],
@@ -53,8 +64,18 @@ const stepHandles: GameStepType = {
   question: "Ce tipuri de manere vi se par mai atragatoare?",
   field: "handles",
   options: [
-    { id: "h1", label: "Manere vizibile", value: "vizibile", image: "/game/cupe.JPG" },
-    { id: "h2", label: "Manere ascunse", value: "ascunse", image: "/game/cupe.JPG" },
+    {
+      id: "h1",
+      label: "Manere vizibile",
+      value: "vizibile",
+      image: "/game/cupe.JPG",
+    },
+    {
+      id: "h2",
+      label: "Manere ascunse",
+      value: "ascunse",
+      image: "/game/cupe.JPG",
+    },
   ] as GameOption[],
 };
 
@@ -63,8 +84,18 @@ const stepDoorType: GameStepType = {
   question: "Ce tip de dulap preferati?",
   field: "doorType",
   options: [
-    { id: "d1", label: "Usi glisante", value: "glisante", image: "/game/cupe.JPG" },
-    { id: "d2", label: "Usi pe balamale", value: "balamale", image: "/game/cupe.JPG" },
+    {
+      id: "d1",
+      label: "Usi glisante",
+      value: "glisante",
+      image: "/game/cupe.JPG",
+    },
+    {
+      id: "d2",
+      label: "Usi pe balamale",
+      value: "balamale",
+      image: "/game/cupe.JPG",
+    },
   ] as GameOption[],
 };
 
@@ -101,7 +132,10 @@ const getStepsForPreferences = (prefs: CustomerPreferences): GameStepType[] => {
   return base;
 };
 
-const PreferenceGame: React.FC<PreferenceGameProps> = ({ onComplete, onRestart }) => {
+const PreferenceGame: React.FC<PreferenceGameProps> = ({
+  onComplete,
+  onRestart,
+}) => {
   const [preferences, setPreferences] = useState<CustomerPreferences>({
     ...emptyPreferences,
   });
@@ -111,13 +145,16 @@ const PreferenceGame: React.FC<PreferenceGameProps> = ({ onComplete, onRestart }
   const [completed, setCompleted] = useState<boolean>(false);
 
   const allSteps = getStepsForPreferences(preferences);
-const currentStep: GameStepType = allSteps[stepIndex] ?? stepRoom;
+  const currentStep: GameStepType = allSteps[stepIndex] ?? stepRoom;
 
   console.log("stepIndex:", stepIndex);
-console.log("allSteps:", allSteps.map(s => s.id));
-console.log("currentStep:", currentStep.id);
-console.log("preferences.room:", preferences.room);
-console.log("preferences.doorType:", preferences.doorType);
+  console.log(
+    "allSteps:",
+    allSteps.map((s) => s.id)
+  );
+  console.log("currentStep:", currentStep.id);
+  console.log("preferences.room:", preferences.room);
+  console.log("preferences.doorType:", preferences.doorType);
   useEffect(() => {
     if (completed) {
       const catalog = document.querySelector("#catalog");
@@ -132,10 +169,13 @@ console.log("preferences.doorType:", preferences.doorType);
       ...preferences,
       [currentStep.field]: value,
     };
-  
+
     setPreferences(updatedPreferences);
-  
-    if (currentStep.field === "room" && (value === "living" || value === "altele")) {
+
+    if (
+      currentStep.field === "room" &&
+      (value === "living" || value === "altele")
+    ) {
       setTimeout(() => {
         setCompleted(true);
         if (onComplete) {
@@ -144,11 +184,11 @@ console.log("preferences.doorType:", preferences.doorType);
       }, 400);
       return;
     }
-  
+
     const updatedSteps = getStepsForPreferences(updatedPreferences);
     const nextIndex = stepIndex + 1;
     const isLastStep = nextIndex >= updatedSteps.length;
-  
+
     setTimeout(() => {
       if (isLastStep) {
         setShowColorPicker(true);
@@ -158,10 +198,10 @@ console.log("preferences.doorType:", preferences.doorType);
     }, 400);
   };
 
-  const handleColorComplete = (colors: [string, string]): void => {
+  const handleColorComplete = (materials: MaterialSelection): void => {
     const updatedPreferences: CustomerPreferences = {
       ...preferences,
-      colors,
+      materials,
     };
     setPreferences(updatedPreferences);
 
@@ -211,50 +251,46 @@ console.log("preferences.doorType:", preferences.doorType);
 
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center bg-charcoal overflow-hidden">
-
       <div className="absolute left-12 top-0 h-full w-px bg-gold opacity-20"></div>
       <div className="absolute right-12 top-0 h-full w-px bg-gold opacity-20"></div>
 
       {!completed ? (
         <div className="w-full flex flex-col items-center justify-center flex-1 px-6">
-
           <div className="flex gap-3 mb-12">
-            {Array.from({ length: totalSteps }).map((_: unknown, index: number) => (
-              <div
-                key={index}
-                className={
-                  "w-8 h-px transition-all duration-300 " +
-                  (index < currentStepNumber ? "bg-gold" : "bg-muted")
-                }
-              >
-              </div>
-            ))}
+            {Array.from({ length: totalSteps }).map(
+              (_: unknown, index: number) => (
+                <div
+                  key={index}
+                  className={
+                    "w-8 h-px transition-all duration-300 " +
+                    (index < currentStepNumber ? "bg-gold" : "bg-muted")
+                  }
+                ></div>
+              )
+            )}
           </div>
 
           {showColorPicker ? (
-            <ColorPicker onComplete={handleColorComplete}>
-            </ColorPicker>
+            <ColorPicker onComplete={handleColorComplete}></ColorPicker>
           ) : showDimensionsStep ? (
-            <DimensionsStep onComplete={handleDimensionsComplete}>
-            </DimensionsStep>
+            <DimensionsStep
+              onComplete={handleDimensionsComplete}
+            ></DimensionsStep>
           ) : (
             <GameStep
               question={currentStep.question}
               options={currentStep.options}
               onSelect={handleSelect}
               selected={getSelected()}
-            >
-            </GameStep>
+            ></GameStep>
           )}
 
           <p className="text-muted text-xs tracking-widest uppercase mt-12">
             {currentStepNumber} / {totalSteps}
           </p>
-
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center text-center px-6">
-
           <p className="text-gold text-xs tracking-[0.4em] uppercase mb-4">
             Profilul Tau
           </p>
@@ -316,44 +352,79 @@ console.log("preferences.doorType:", preferences.doorType);
                 </p>
               </div>
             )}
-            {preferences.colors && (
-              <div>
-                <p className="text-muted text-xs tracking-widest uppercase mb-2">
-                  Culori
-                </p>
-                <div className="flex gap-2 justify-center">
-                  <div
-                    className="w-6 h-6 border border-gold"
-                    style={{ backgroundColor: preferences.colors[0] }}
-                  >
-                  </div>
-                  <div
-                    className="w-6 h-6 border border-gold"
-                    style={{ backgroundColor: preferences.colors[1] }}
-                  >
+            {preferences.materials &&
+              (preferences.materials.pal || preferences.materials.mdf) && (
+                <div>
+                  <p className="text-muted text-xs tracking-widest uppercase mb-2">
+                    Materiale
+                  </p>
+                  <div className="flex gap-4 justify-center">
+                    {preferences.materials.pal && (
+                      <div className="flex flex-col items-center gap-1">
+                        <img
+                          src={preferences.materials.pal.image}
+                          alt={preferences.materials.pal.name}
+                          style={{
+                            width: "32px",
+                            height: "32px",
+                            objectFit: "cover",
+                            border: "1px solid #C9A84C",
+                          }}
+                        />
+                        <span className="text-muted text-xs">
+                          PAL: {preferences.materials.pal.name}
+                        </span>
+                      </div>
+                    )}
+                    {preferences.materials.mdf && (
+                      <div className="flex flex-col items-center gap-1">
+                        <img
+                          src={preferences.materials.mdf.image}
+                          alt={preferences.materials.mdf.name}
+                          style={{
+                            width: "32px",
+                            height: "32px",
+                            objectFit: "cover",
+                            border: "1px solid #C9A84C",
+                          }}
+                        />
+                        <span className="text-muted text-xs">
+                          MDF: {preferences.materials.mdf.name}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
-              </div>
-            )}
-            {preferences.dimensions && (preferences.dimensions.width || preferences.dimensions.height) && (
-              <div>
-                <p className="text-muted text-xs tracking-widest uppercase mb-1">
-                  Dimensiuni
-                </p>
-                <p className="text-cream text-sm">
-                  {preferences.dimensions.width ? `W: ${preferences.dimensions.width}cm` : ""}
-                  {preferences.dimensions.width && preferences.dimensions.height ? " × " : ""}
-                  {preferences.dimensions.height ? `H: ${preferences.dimensions.height}cm` : ""}
-                </p>
-              </div>
-            )}
+              )}
+            {preferences.dimensions &&
+              (preferences.dimensions.width ||
+                preferences.dimensions.height) && (
+                <div>
+                  <p className="text-muted text-xs tracking-widest uppercase mb-1">
+                    Dimensiuni
+                  </p>
+                  <p className="text-cream text-sm">
+                    {preferences.dimensions.width
+                      ? `W: ${preferences.dimensions.width}cm`
+                      : ""}
+                    {preferences.dimensions.width &&
+                    preferences.dimensions.height
+                      ? " × "
+                      : ""}
+                    {preferences.dimensions.height
+                      ? `H: ${preferences.dimensions.height}cm`
+                      : ""}
+                  </p>
+                </div>
+              )}
           </div>
           <a
-          
             href="#contact"
             onClick={(e) => {
               e.preventDefault();
-              document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
+              document
+                .querySelector("#contact")
+                ?.scrollIntoView({ behavior: "smooth" });
             }}
             className="inline-block border border-gold text-gold text-xs tracking-[0.3em] uppercase px-10 py-4 hover:bg-gold hover:text-dark transition-all duration-500 mt-12"
           >
@@ -366,10 +437,8 @@ console.log("preferences.doorType:", preferences.doorType);
           >
             Incepe din nou
           </button>
-
         </div>
       )}
-
     </div>
   );
 };

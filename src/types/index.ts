@@ -33,7 +33,7 @@ export interface CustomerPreferences {
   kitchenType: KitchenType | null;
   handles: HandleType | null;
   doorType: DoorType | null;
-  colors: [string, string] | null;
+  materials: MaterialSelection | null;
   priceRange: PriceRange | null;
   description?: string;
   dimensions?: Dimensions;
@@ -57,6 +57,16 @@ export interface EmailPayload {
 export interface Dimensions {
   width: string;
   height: string;
+}
+
+export interface Material {
+  name: string;
+  image: string;
+}
+
+export interface MaterialSelection {
+  pal: Material | null;
+  mdf: Material | null;
 }
 
 // Enums

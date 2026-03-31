@@ -14,7 +14,7 @@ export default function Home() {
     kitchenType: null,
     handles: null,
     doorType: null,
-    colors: null,
+    materials: null,
     priceRange: null,
   });
 
@@ -28,7 +28,7 @@ export default function Home() {
       kitchenType: null,
       handles: null,
       doorType: null,
-      colors: null,
+      materials: null,
       priceRange: null,
     });
   };

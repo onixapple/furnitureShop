@@ -11,21 +11,21 @@ interface ValueProp {
 const values: ValueProp[] = [
   {
     icon: "✦",
-    title: "Handcrafted Excellence",
+    title: "Mobila la comanda",
     description:
-      "Every piece is crafted by master artisans with decades of experience, ensuring unparalleled quality in every detail.",
+      "Orice obiect este efectuat individual, dupa preferinta.",
   },
   {
     icon: "✦",
-    title: "Timeless Design",
+    title: "Echipa profesionala",
     description:
-      "We believe furniture should transcend trends. Our designs are built to remain elegant and relevant for generations.",
-  },
+      "Designerul este si managerul companiei. A fost constructor timp de 20 de ani, 8 ani in Italia si Germania , si restul in Moldova. Are ochi pentru amanunturi, si efectueaza orice comanda la milimetru. S-a plasat pe locul 2 la campionatul moldovei la pus plita in baie, ceea ce demonstreaza aptitudinile de precizie",
+    },
   {
     icon: "✦",
-    title: "Sustainable Materials",
+    title: "Toate capriciile pentru banii vostri",
     description:
-      "We source only the finest ethically harvested woods, natural fabrics, and recycled metals from trusted suppliers.",
+      "Preturile incep de la un minim, si cresc in functie de preferinte. De exemplu un dulap ar putea fi amenajat cu lumina ceea ce se adaugalapret. Iar in cazul unei bucatarii, se pot folosi sertare avansate de la blum, balamali blum, sisteme speciale de deschidere a fasadelor si deasemenea lumina cu sensor integrata in dulap.",
   },
 ];
 
@@ -36,10 +36,10 @@ interface AboutUsProps {
 }
 
 const AboutUs: React.FC<AboutUsProps> = ({
-  heading = "A Legacy of Craftsmanship",
-  subheading = "Our Story",
+  heading = "Doua decenii alaturi de voi",
+  subheading = "Istoria noastra",
   story =
-    "Founded in 1987, Maison was born from a single belief — that the spaces we inhabit shape the lives we live. For over three decades we have been creating furniture that blends old world artisanship with contemporary vision, piece by piece, room by room.",
+    "In 2005 Cazacu Teodor s-a intors de peste hotare cu scopul de a renunta la meseria de construtor. Prima lucrare a fost chiar la el acasa. O bucatarie de 4,5 metri, care pana si acum nu a necesitat reparatii. In 2010 a fost deschisa compania, care pana in ziua de astazi a efectuat peste 1000 de lucrari pe tot teritoriul Moldovei, precum si peste hotare.",
 }) => {
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center bg-charcoal overflow-hidden px-6">
@@ -70,38 +70,35 @@ const AboutUs: React.FC<AboutUsProps> = ({
           </p>
 
           <p className="text-muted text-sm leading-relaxed tracking-wide">
-            Today, Maison operates from our flagship showroom where every visit
-            is a journey through texture, form, and function. We invite you to
-            experience furniture not as a purchase, but as an investment in your
-            everyday life.
+            Astazi, noi ne asumam cele mai dificile lucrari, care necesita proiecte individuale, saptamani de pregatire, ca intr-un final sa indeplinim cu success fiecare obiect.
           </p>
 
           {/* Stat row */}
           <div className="flex gap-12 mt-12">
             <div>
               <p className="font-serif text-4xl text-gold font-light">
-                35+
+                15+
               </p>
               <p className="text-muted text-xs tracking-widest uppercase mt-1">
-                Years
+                Ani
               </p>
             </div>
             <div>
               <p className="font-serif text-4xl text-gold font-light">
-                200+
+                1000+
               </p>
               <p className="text-muted text-xs tracking-widest uppercase mt-1">
-                Pieces
+                obiecte
               </p>
             </div>
-            <div>
+            {/*<div>
               <p className="font-serif text-4xl text-gold font-light">
                 12
               </p>
               <p className="text-muted text-xs tracking-widest uppercase mt-1">
                 Artisans
               </p>
-            </div>
+            </div>*/}
           </div>
         </div>
 

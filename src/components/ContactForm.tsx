@@ -85,19 +85,18 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
         {/* Left — Heading */}
         <div className="flex flex-col">
           <p className="text-gold text-xs tracking-[0.4em] uppercase mb-4">
-            Get In Touch
+            Contactati-ne
           </p>
   
           <h2 className="font-serif text-5xl md:text-6xl text-cream font-light leading-tight mb-6">
-            Let Us Find Your Perfect Piece
+            
           </h2>
   
           <div className="gold-divider" style={{ margin: "0 0 1.5rem 0" }}></div>
   
           <p className="text-muted text-sm leading-relaxed tracking-wide mb-12">
-            Whether you have a specific piece in mind or need guidance curating
-            an entire space, our consultants are here to help. Reach out and we
-            will respond within 24 hours.
+            Vom efectua un pret provizoriu pe baza cerintelor dumnevoastra si 
+           va vom contacta in cel mai scurt timp.
           </p>
   
           <div className="flex flex-col gap-6">
@@ -106,15 +105,15 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
                 Showroom
               </p>
               <p className="text-cream text-sm">
-                14 Rue de Lumière, Paris 75008
+                Calea Basarabiei, 
               </p>
             </div>
             <div>
               <p className="text-gold text-xs tracking-widest uppercase mb-1">
-                Hours
+                Ore
               </p>
               <p className="text-cream text-sm">
-                Monday – Saturday, 10:00 – 19:00
+                Marti – Duminica, 09:00 – 18:00
               </p>
             </div>
             <div>
@@ -122,7 +121,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
                 Email
               </p>
               <p className="text-cream text-sm">
-                contact@maisonluxury.com
+                radu.cazacu1@gmail.com 
               </p>
             </div>
           </div>
@@ -135,14 +134,14 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
           {preferences && Object.values(preferences).some((v) => v !== null) && (
             <div className="border border-gold border-opacity-30 p-4 mb-2">
               <p className="text-gold text-xs tracking-widest uppercase mb-3">
-                Your Preferences
+                Preferinte
               </p>
               <div className="flex flex-wrap gap-6">
   
                 {preferences.room && (
                   <div>
                     <p className="text-muted text-xs uppercase tracking-widest">
-                      Room
+                      Categorie
                     </p>
                     <p className="text-cream text-xs capitalize mt-1">
                       {preferences.room}
@@ -153,7 +152,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
                 {preferences.kitchenType && (
                   <div>
                     <p className="text-muted text-xs uppercase tracking-widest">
-                      Style
+                      Stil
                     </p>
                     <p className="text-cream text-xs capitalize mt-1">
                       {preferences.kitchenType}
@@ -164,7 +163,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
                 {preferences.doorType && (
                   <div>
                     <p className="text-muted text-xs uppercase tracking-widest">
-                      Doors
+                      Usi
                     </p>
                     <p className="text-cream text-xs capitalize mt-1">
                       {preferences.doorType}
@@ -175,7 +174,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
                 {preferences.handles && (
                   <div>
                     <p className="text-muted text-xs uppercase tracking-widest">
-                      Handles
+                      Manere
                     </p>
                     <p className="text-cream text-xs capitalize mt-1">
                       {preferences.handles}
@@ -186,7 +185,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
                 {preferences.priceRange && (
                   <div>
                     <p className="text-muted text-xs uppercase tracking-widest">
-                      Budget
+                      Buget
                     </p>
                     <p className="text-cream text-xs capitalize mt-1">
                       {preferences.priceRange}
@@ -194,20 +193,20 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
                   </div>
                 )}
   
-                {preferences.colors && (
+                {preferences.materials && (
                   <div>
                     <p className="text-muted text-xs uppercase tracking-widest">
-                      Colors
+                      Culori
                     </p>
                     <div className="flex gap-2 mt-1">
                       <div
                         className="w-5 h-5 border border-gold"
-                        style={{ backgroundColor: preferences.colors[0] }}
+                        style={{ backgroundColor: preferences.materials.pal?.image }}
                       >
                       </div>
                       <div
                         className="w-5 h-5 border border-gold"
-                        style={{ backgroundColor: preferences.colors[1] }}
+                        style={{ backgroundColor: preferences.materials.mdf?.image }}
                       >
                       </div>
                     </div>
@@ -221,7 +220,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
           {/* Name */}
           <div className="flex flex-col gap-2">
             <label className="text-muted text-xs tracking-widest uppercase">
-              Full Name
+              Nume
             </label>
             <input
               type="text"
@@ -237,7 +236,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
           {/* Email */}
           <div className="flex flex-col gap-2">
             <label className="text-muted text-xs tracking-widest uppercase">
-              Email Address
+              Email
             </label>
             <input
               type="email"
@@ -277,18 +276,18 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
                 : "border-gold text-gold hover:bg-gold hover:text-dark cursor-pointer")
             }
           >
-            {status === "loading" ? "Sending..." : "Send Enquiry"}
+            {status === "loading" ? "Sending..." : "Expediati"}
           </button>
   
           {status === "success" && (
             <p className="text-gold text-xs tracking-widest uppercase text-center">
-              ✓ Your message has been sent. We will be in touch shortly.
+              ✓ Mesajul a fost trimis, va vom contacta in curand.
             </p>
           )}
   
           {status === "error" && (
             <p className="text-red-400 text-xs tracking-widest uppercase text-center">
-              Something went wrong. Please try again.
+              Ceva a mers gresit, incearca din nou.
             </p>
           )}
   
