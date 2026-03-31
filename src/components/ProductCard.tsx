@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import { Product } from "@/types";
 
 interface ProductCardProps {
@@ -12,19 +11,44 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <div className="group relative flex flex-col overflow-hidden border border-charcoal hover:border-gold transition-all duration-500">
 
-      {/* Image */}
-      <div className="relative w-full h-64 overflow-hidden bg-charcoal">
-        <Image
+      {/* Image container */}
+      <div style={{ position: "relative", width: "100%", height: "280px", overflow: "hidden" }}>
+        <img
           src={product.imageUrl}
           alt={product.name}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-700"
-        >
-        </Image>
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            transition: "transform 0.7s ease",
+            imageRendering: "auto",
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLImageElement).style.transform = "scale(1.05)";
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLImageElement).style.transform = "scale(1)";
+          }}
+        />
 
         {product.featured && (
-          <div className="absolute top-3 left-3 bg-gold text-dark text-xs tracking-widest uppercase px-3 py-1">
-            Featured
+          <div
+            style={{
+              position: "absolute",
+              top: "12px",
+              left: "12px",
+              backgroundColor: "#C9A84C",
+              color: "#0F0F0F",
+              fontSize: "10px",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              padding: "4px 10px",
+            }}
+          >
+            Recomandat
           </div>
         )}
       </div>
@@ -46,14 +70,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div className="mt-auto pt-4 flex items-center justify-between">
           <span className="text-gold text-xs tracking-widest uppercase">
             {product.priceRange === "budget"
-              ? "Accessible"
+              ? "Accesibil"
               : product.priceRange === "mid"
-              ? "Mid Range"
-              : "Luxury"}
+              ? "Mediu"
+              : "Lux"}
           </span>
 
           <button className="text-xs tracking-widest uppercase text-cream hover:text-gold transition-colors duration-300">
-            Enquire →
+            Detalii →
           </button>
         </div>
       </div>

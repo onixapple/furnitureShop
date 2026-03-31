@@ -36,7 +36,7 @@ const stepRoom: GameStepType = {
       id: "r1",
       label: "Bucatarii",
       value: "bucatarie",
-      image: "/game/cupe.JPG",
+      image: "/game/bucatarie1.JPG",
     },
     {
       id: "r2",
@@ -44,8 +44,8 @@ const stepRoom: GameStepType = {
       value: "dulapuri",
       image: "/game/simplu.jpg",
     },
-    { id: "r3", label: "Living", value: "living", image: "/game/cupe.JPG" },
-    { id: "r4", label: "Altele", value: "altele", image: "/game/cupe.JPG" },
+    { id: "r3", label: "Living", value: "living", image: "/game/living01.JPG" },
+    { id: "r4", label: "Altele", value: "altele", image: "/game/altele1.JPG" },
   ] as GameOption[],
 };
 

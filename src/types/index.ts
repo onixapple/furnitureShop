@@ -76,4 +76,4 @@ export type PriceRange = "budget" | "mid" | "luxury";
 export type RoomType = "bucatarie" | "dulapuri" | "livinguri" | "altele";
 export type KitchenType = "classic" | "modern";
 export type HandleType = "vizibile" | "ascunse";
-export type DoorType = "glisante" | "balamale";
+export type DoorType = "glisante" | "balamale"; 
