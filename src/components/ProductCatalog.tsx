@@ -5,8 +5,6 @@ import ProductCard from "@/components/ProductCard";
 import { fetchProducts } from "@/lib/products";
 import { Product, ProductCategory } from "@/types";
 
-type FilterKey = "category";
-
 interface ActiveFilters {
   category: ProductCategory | null;
 }
@@ -91,10 +89,9 @@ const ProductCatalog: React.FC = () => {
     setVisible(PAGE_SIZE);
   }, [products, filters.category]);
 
-  const toggleFilter = (key: FilterKey, value: string): void => {
+  const toggleFilter = (value: ProductCategory): void => {
     setFilters((prev) => ({
-      ...prev,
-      [key]: prev[key] === value ? null : value,
+      category: prev.category === value ? null : value,
     }));
   };
 
@@ -131,7 +128,7 @@ const ProductCatalog: React.FC = () => {
         {categoryOptions.map((opt) => (
           <button
             key={opt.value}
-            onClick={() => toggleFilter("category", opt.value)}
+            onClick={() => toggleFilter(opt.value)}
             className={
               "text-xs tracking-widest uppercase px-5 py-2 rounded-full border transition-all duration-300 " +
               (filters.category === opt.value
