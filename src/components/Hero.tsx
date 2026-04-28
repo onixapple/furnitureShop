@@ -11,9 +11,9 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = ({
   title = "Creat pentru perfectiune",
-  subtitle = "Descopera solutii unice si potrivite pentru locuinta ta. Recomandam sa treci chestionarul care ne va ajuta sa intelegem ce va doriti.",
-  ctaLabel = "Incepe chestionarul",
-  ctaHref = "#game",
+  subtitle = "Descopera solutii unice si potrivite pentru locuinta ta.",
+  ctaLabel = "Vezi catalogul",
+  ctaHref = "#catalog",
 }) => {
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string): void => {
@@ -35,11 +35,11 @@ const Hero: React.FC<HeroProps> = ({
       </div>
 
       {/* Gold vertical line decoration */}
-      <div className="absolute left-12 top-0 h-full w-px bg-gold opacity-20"></div>
-      <div className="absolute right-12 top-0 h-full w-px bg-gold opacity-20"></div>
+      <div className="absolute left-4 md:left-12 top-0 h-full w-px bg-gold opacity-20"></div>
+      <div className="absolute right-4 md:right-12 top-0 h-full w-px bg-gold opacity-20"></div>
 
       {/* Content */}
-      <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+      <div className="relative z-10 text-center px-6 max-w-4xl mx-auto pt-16 md:pt-0">
 
         {/* Eyebrow label */}
         <p className="text-gold text-xs tracking-[0.4em] uppercase mb-6">
@@ -47,7 +47,7 @@ const Hero: React.FC<HeroProps> = ({
         </p>
 
         {/* Main title */}
-        <h1 className="font-serif text-6xl md:text-8xl text-cream font-light leading-tight mb-6">
+        <h1 className="font-serif text-4xl md:text-8xl text-cream font-light leading-tight mb-6">
           {title}
         </h1>
 

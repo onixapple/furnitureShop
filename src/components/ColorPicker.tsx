@@ -94,10 +94,10 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ onComplete }) => {
         <div className="gold-divider"></div>
       </div>
 
-      {/* Two columns */}
-      <div className="flex flex-1 overflow-hidden">
+      {/* Two columns — stacked on mobile, side-by-side on desktop */}
+      <div className="flex flex-col md:flex-row flex-1 overflow-y-auto md:overflow-hidden">
         {/* PAL column */}
-        <div className="flex-1 flex flex-col border-r border-gold border-opacity-20 overflow-hidden">
+        <div className="flex-1 flex flex-col border-b md:border-b-0 md:border-r border-gold border-opacity-20 overflow-hidden">
           {/* PAL Header */}
           <div
   className="px-6 py-4 border-b border-gold border-opacity-10 relative overflow-hidden"
@@ -133,11 +133,8 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ onComplete }) => {
 </div>
 
           {/* PAL Grid */}
-          <div
-            className="overflow-y-auto p-4"
-            style={{ maxHeight: "calc(100% - 100px)" }}
-          >
-            <div className="grid grid-cols-5 gap-2">
+          <div className="overflow-y-auto p-4 max-h-48 md:max-h-none">
+            <div className="grid grid-cols-4 md:grid-cols-5 gap-2">
               {palOptions.map((option: MaterialOption) => (
                 <button
                   key={option.name}
@@ -205,11 +202,8 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ onComplete }) => {
 </div>
 
           {/* MDF Grid */}
-          <div
-            className="overflow-y-auto p-4"
-            style={{ maxHeight: "calc(100% - 100px)" }}
-          >
-            <div className="grid grid-cols-5 gap-2">
+          <div className="overflow-y-auto p-4 max-h-48 md:max-h-none">
+            <div className="grid grid-cols-4 md:grid-cols-5 gap-2">
               {mdfOptions.map((option: MaterialOption) => (
                 <button
                   key={option.name}

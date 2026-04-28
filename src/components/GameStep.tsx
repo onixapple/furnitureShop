@@ -23,24 +23,23 @@ const GameStep: React.FC<GameStepProps> = ({
         
       </p>
 
-      <h2 className="font-serif text-4xl md:text-5xl text-cream font-light text-center mb-4">
+      <h2 className="font-serif text-2xl md:text-5xl text-cream font-light text-center mb-4">
         {question}
       </h2>
 
       <div className="gold-divider"></div>
 
-      <div className="flex flex-wrap justify-center gap-4 mt-8 w-full max-w-4xl">
+      <div className="flex flex-wrap justify-center gap-3 md:gap-4 mt-6 md:mt-8 w-full max-w-4xl">
         {options.map((option: GameOption) => (
           <button
             key={option.id}
             onClick={() => onSelect(option.value)}
             className={
-              "overflow-hidden transition-all duration-300 cursor-pointer " +
+              "relative block overflow-hidden transition-all duration-300 cursor-pointer w-36 h-36 md:w-48 md:h-48 " +
               (selected === option.value
                 ? "ring-2 ring-gold scale-105"
                 : "ring-1 ring-muted hover:ring-gold hover:scale-105")
             }
-            style={{ width: "192px", height: "192px", position: "relative", display: "block" }}
           >
 
             {/* Background image */}

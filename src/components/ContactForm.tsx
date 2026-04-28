@@ -1,11 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ContactFormData, CustomerPreferences } from "@/types";
-
-interface ContactFormProps {
-  preferences?: CustomerPreferences;
-}
+import { ContactFormData } from "@/types";
 
 interface FormState {
   name: string;
@@ -15,7 +11,7 @@ interface FormState {
 
 type SubmitStatus = "idle" | "loading" | "success" | "error";
 
-const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
+const ContactForm: React.FC = () => {
   const [form, setForm] = useState<FormState>({
     name: "",
     email: "",
@@ -48,7 +44,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
       name: form.name,
       email: form.email,
       message: form.message,
-      preferences,
     };
 
     try {
@@ -124,137 +119,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ preferences }) => {
 
         {/* Right — Form */}
         <div className="flex flex-col gap-6">
-          {/* Preferences summary */}
-          {preferences &&
-            Object.values(preferences).some((v) => v !== null) && (
-              <div className="border border-gold border-opacity-30 p-4 mb-2">
-                <p className="text-gold text-xs tracking-widest uppercase mb-3">
-                  Preferinte
-                </p>
-                <div className="flex flex-wrap gap-6">
-                  {preferences.room && (
-                    <div>
-                      <p className="text-muted text-xs uppercase tracking-widest">
-                        Categorie
-                      </p>
-                      <p className="text-cream text-xs capitalize mt-1">
-                        {preferences.room}
-                      </p>
-                    </div>
-                  )}
-
-                  {preferences.kitchenType && (
-                    <div>
-                      <p className="text-muted text-xs uppercase tracking-widest">
-                        Stil
-                      </p>
-                      <p className="text-cream text-xs capitalize mt-1">
-                        {preferences.kitchenType}
-                      </p>
-                    </div>
-                  )}
-
-                  {preferences.doorType && (
-                    <div>
-                      <p className="text-muted text-xs uppercase tracking-widest">
-                        Usi
-                      </p>
-                      <p className="text-cream text-xs capitalize mt-1">
-                        {preferences.doorType}
-                      </p>
-                    </div>
-                  )}
-
-                  {preferences.handles && (
-                    <div>
-                      <p className="text-muted text-xs uppercase tracking-widest">
-                        Manere
-                      </p>
-                      <p className="text-cream text-xs capitalize mt-1">
-                        {preferences.handles}
-                      </p>
-                    </div>
-                  )}
-
-                  {preferences.priceRange && (
-                    <div>
-                      <p className="text-muted text-xs uppercase tracking-widest">
-                        Buget
-                      </p>
-                      <p className="text-cream text-xs capitalize mt-1">
-                        {preferences.priceRange}
-                      </p>
-                    </div>
-                  )}
-                  {preferences.dimensions &&
-                    (preferences.dimensions.width ||
-                      preferences.dimensions.height) && (
-                      <div>
-                        <p className="text-muted text-xs uppercase tracking-widest">
-                          Dimensiuni
-                        </p>
-                        <p className="text-cream text-xs mt-1">
-                          {preferences.dimensions.width
-                            ? `W: ${preferences.dimensions.width}cm`
-                            : ""}
-                          {preferences.dimensions.width &&
-                          preferences.dimensions.height
-                            ? " × "
-                            : ""}
-                          {preferences.dimensions.height
-                            ? `H: ${preferences.dimensions.height}cm`
-                            : ""}
-                        </p>
-                      </div>
-                    )}
-
-                  {preferences.materials && (
-                    <div>
-                      <p className="text-muted text-xs uppercase tracking-widest">
-                        Materiale
-                      </p>
-                      <div className="flex gap-4 mt-2">
-                        {preferences.materials.pal && (
-                          <div className="flex flex-col items-center gap-1">
-                            <img
-                              src={preferences.materials.pal.image}
-                              alt={preferences.materials.pal.name}
-                              style={{
-                                width: "30px",
-                                height: "30px",
-                                objectFit: "cover",
-                                border: "1px solid #C9A84C",
-                              }}
-                            />
-                            <span className="text-muted text-xs">
-                              PAL: {preferences.materials.pal.name}
-                            </span>
-                          </div>
-                        )}
-                        {preferences.materials.mdf && (
-                          <div className="flex flex-col items-center gap-1">
-                            <img
-                              src={preferences.materials.mdf.image}
-                              alt={preferences.materials.mdf.name}
-                              style={{
-                                width: "30px",
-                                height: "30px",
-                                objectFit: "cover",
-                                border: "1px solid #C9A84C",
-                              }}
-                            />
-                            <span className="text-muted text-xs">
-                              MDF: {preferences.materials.mdf.name}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
           {/* Name */}
           <div className="flex flex-col gap-2">
             <label className="text-muted text-xs tracking-widest uppercase">

@@ -250,13 +250,13 @@ const PreferenceGame: React.FC<PreferenceGameProps> = ({
     : stepIndex + 1;
 
   return (
-    <div className="relative w-full h-screen flex flex-col items-center justify-center bg-charcoal overflow-hidden">
-      <div className="absolute left-12 top-0 h-full w-px bg-gold opacity-20"></div>
-      <div className="absolute right-12 top-0 h-full w-px bg-gold opacity-20"></div>
+    <div className="relative w-full min-h-screen flex flex-col items-center justify-center bg-charcoal overflow-y-auto">
+      <div className="absolute left-4 md:left-12 top-0 h-full w-px bg-gold opacity-20"></div>
+      <div className="absolute right-4 md:right-12 top-0 h-full w-px bg-gold opacity-20"></div>
 
       {!completed ? (
-        <div className="w-full flex flex-col items-center justify-center flex-1 px-6">
-          <div className="flex gap-3 mb-12">
+        <div className="w-full flex flex-col items-center justify-center flex-1 px-4 md:px-6 pt-20 pb-6 md:pt-0 md:pb-0">
+          <div className="flex gap-3 mb-6 md:mb-12">
             {Array.from({ length: totalSteps }).map(
               (_: unknown, index: number) => (
                 <div
@@ -285,17 +285,17 @@ const PreferenceGame: React.FC<PreferenceGameProps> = ({
             ></GameStep>
           )}
 
-          <p className="text-muted text-xs tracking-widest uppercase mt-12">
+          <p className="text-muted text-xs tracking-widest uppercase mt-6 md:mt-12">
             {currentStepNumber} / {totalSteps}
           </p>
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center text-center px-6">
+        <div className="flex flex-col items-center justify-center text-center px-4 md:px-6 pt-20 pb-8 md:pt-0 md:pb-0">
           <p className="text-gold text-xs tracking-[0.4em] uppercase mb-4">
             Profilul Tau
           </p>
 
-          <h2 className="font-serif text-5xl text-cream font-light mb-4">
+          <h2 className="font-serif text-3xl md:text-5xl text-cream font-light mb-4">
             Perfect. Stim exact ce va trebuie.
           </h2>
 
@@ -426,7 +426,7 @@ const PreferenceGame: React.FC<PreferenceGameProps> = ({
                 .querySelector("#contact")
                 ?.scrollIntoView({ behavior: "smooth" });
             }}
-            className="inline-block border border-gold text-gold text-xs tracking-[0.3em] uppercase px-10 py-4 hover:bg-gold hover:text-dark transition-all duration-500 mt-12"
+            className="inline-block border border-gold text-gold text-xs tracking-[0.3em] uppercase px-10 py-4 hover:bg-gold hover:text-dark transition-all duration-500 mt-8 md:mt-12"
           >
             Contactati-ne
           </a>

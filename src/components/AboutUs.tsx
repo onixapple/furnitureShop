@@ -42,7 +42,7 @@ const AboutUs: React.FC<AboutUsProps> = ({
     "In 2005 Cazacu Teodor s-a intors de peste hotare cu scopul de a renunta la meseria de construtor. Prima lucrare a fost chiar la el acasa. O bucatarie de 4,5 metri, care pana si acum nu a necesitat reparatii. In 2010 a fost deschisa compania, care pana in ziua de astazi a efectuat peste 1000 de lucrari pe tot teritoriul Moldovei, precum si peste hotare.",
 }) => {
   return (
-    <div className="relative w-full h-screen flex flex-col items-center justify-center bg-charcoal overflow-hidden px-6">
+    <div className="relative w-full min-h-screen flex flex-col items-center justify-center bg-charcoal overflow-y-auto px-6 py-20 md:py-0">
 
       {/* Gold line decorations */}
       <div className="absolute left-12 top-0 h-full w-px bg-gold opacity-20"></div>
@@ -51,7 +51,7 @@ const AboutUs: React.FC<AboutUsProps> = ({
       {/* Top decorative line */}
       <div className="absolute top-0 left-12 right-12 h-px bg-gold opacity-10"></div>
 
-      <div className="max-w-6xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
+      <div className="max-w-6xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-center">
 
         {/* Left — Story */}
         <div className="flex flex-col">
@@ -74,7 +74,7 @@ const AboutUs: React.FC<AboutUsProps> = ({
           </p>
 
           {/* Stat row */}
-          <div className="flex gap-12 mt-12">
+          <div className="flex gap-12 mt-8 md:mt-12">
             <div>
               <p className="font-serif text-4xl text-gold font-light">
                 15+
