@@ -1,14 +1,47 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Product } from "@/types";
 
 interface ProductCardProps {
   product: Product;
 }
 
+const LABELS = ["Foto", "Proiect"];
+
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [expanded, setExpanded] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const images = [
+    product.imageUrl,
+    ...(product.projectImageUrl ? [product.projectImageUrl] : []),
+  ];
+  const hasMultiple = images.length > 1;
+
+  const prev = useCallback(() => {
+    setActiveIndex((i) => (i - 1 + images.length) % images.length);
+  }, [images.length]);
+
+  const next = useCallback(() => {
+    setActiveIndex((i) => (i + 1) % images.length);
+  }, [images.length]);
+
+  useEffect(() => {
+    if (!expanded) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
+      if (e.key === "Escape") setExpanded(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [expanded, prev, next]);
+
+  const openModal = () => {
+    setActiveIndex(0);
+    setExpanded(true);
+  };
 
   return (
     <>
@@ -18,7 +51,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div
           className="relative w-full cursor-zoom-in"
           style={{ height: "160px" }}
-          onClick={() => setExpanded(true)}
+          onClick={openModal}
         >
           <img
             src={product.imageUrl}
@@ -33,6 +66,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               </svg>
             </div>
           </div>
+
+          {/* Badge when second image exists */}
+          {hasMultiple && (
+            <div className="absolute bottom-2 right-2 flex gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-gold/80" />
+              <span className="w-1.5 h-1.5 rounded-full bg-gold/40" />
+            </div>
+          )}
         </div>
 
         {/* Info */}
@@ -46,31 +87,81 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
       </div>
 
-      {/* Expanded image modal */}
+      {/* Lightbox */}
       {expanded && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md cursor-zoom-out"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md"
           onClick={() => setExpanded(false)}
         >
           <div
-            className="relative max-w-4xl max-h-[90vh] w-full mx-6"
+            className="relative flex flex-col items-center w-full max-w-4xl mx-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <img
-              src={product.imageUrl}
-              alt={product.name}
-              className="w-full h-full object-contain rounded-2xl shadow-2xl"
-              style={{ maxHeight: "85vh" }}
-            />
-            <button
-              onClick={() => setExpanded(false)}
-              className="absolute top-3 right-3 bg-black/50 hover:bg-black/80 text-white rounded-full w-9 h-9 flex items-center justify-center transition-colors duration-200 backdrop-blur-sm"
-            >
-              ✕
-            </button>
-            <div className="mt-3 text-center">
+            {/* Image */}
+            <div className="relative w-full flex items-center justify-center">
+              <img
+                src={images[activeIndex]}
+                alt={LABELS[activeIndex]}
+                className="max-h-[75vh] w-full object-contain rounded-xl shadow-2xl"
+              />
+
+              {/* Prev arrow */}
+              {hasMultiple && (
+                <button
+                  onClick={prev}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors duration-200 backdrop-blur-sm"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+              )}
+
+              {/* Next arrow */}
+              {hasMultiple && (
+                <button
+                  onClick={next}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors duration-200 backdrop-blur-sm"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              )}
+
+              {/* Close */}
+              <button
+                onClick={() => setExpanded(false)}
+                className="absolute top-3 right-3 bg-black/50 hover:bg-black/80 text-white rounded-full w-9 h-9 flex items-center justify-center transition-colors duration-200 backdrop-blur-sm text-sm"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Caption + dots */}
+            <div className="mt-4 flex flex-col items-center gap-3">
+              {/* Label tabs */}
+              {hasMultiple && (
+                <div className="flex gap-2">
+                  {images.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActiveIndex(i)}
+                      className={
+                        "text-[10px] tracking-widest uppercase px-4 py-1.5 border transition-all duration-300 " +
+                        (i === activeIndex
+                          ? "border-gold text-gold"
+                          : "border-white/20 text-muted hover:border-gold/50 hover:text-cream")
+                      }
+                    >
+                      {LABELS[i]}
+                    </button>
+                  ))}
+                </div>
+              )}
+
               <p className="text-cream font-serif text-lg">{product.category}</p>
-              <p className="text-muted text-xs leading-relaxed mt-1">{product.description}</p>
+              <p className="text-muted text-xs leading-relaxed">{product.description}</p>
             </div>
           </div>
         </div>

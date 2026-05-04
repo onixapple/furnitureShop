@@ -10,6 +10,7 @@ interface NavLink {
 const links: NavLink[] = [
   { label: "Acasa", href: "#hero" },
   { label: "Catalog", href: "#catalog" },
+  { label: "Culori", href: "#culori" },
   { label: "Despre Noi", href: "#about" },
   { label: "Contact", href: "#contact" },
 ];
@@ -28,7 +29,7 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full z-50 px-6 md:px-12 py-4 md:py-6 flex justify-between items-center bg-dark bg-opacity-80 backdrop-blur-sm">
+      <nav className="fixed top-0 left-0 w-full z-50 px-6 md:px-12 py-4 md:py-6 flex justify-between items-center bg-dark/90 backdrop-blur-sm" style={{ paddingTop: "max(1rem, env(safe-area-inset-top))" }}>
         <span className="font-serif text-xl md:text-2xl text-gold tracking-widest uppercase">
           TeoMob
         </span>
@@ -49,25 +50,25 @@ const Navbar: React.FC = () => {
 
         {/* Hamburger button — mobile only */}
         <button
-          className="md:hidden flex flex-col justify-center gap-[5px] w-6 h-6 cursor-pointer"
+          className="md:hidden flex flex-col justify-center gap-[6px] w-10 h-10 cursor-pointer"
           onClick={() => setIsOpen((prev) => !prev)}
           aria-label="Toggle menu"
         >
           <span
             className={
-              "block h-px bg-gold transition-all duration-300 " +
+              "block w-full h-px bg-gold transition-all duration-300 " +
               (isOpen ? "rotate-45 translate-y-[6px]" : "")
             }
           />
           <span
             className={
-              "block h-px bg-gold transition-all duration-300 " +
+              "block w-full h-px bg-gold transition-all duration-300 " +
               (isOpen ? "opacity-0" : "")
             }
           />
           <span
             className={
-              "block h-px bg-gold transition-all duration-300 " +
+              "block w-full h-px bg-gold transition-all duration-300 " +
               (isOpen ? "-rotate-45 -translate-y-[6px]" : "")
             }
           />

@@ -3,12 +3,10 @@ export interface Product {
   id: string;
   name: string;
   category: ProductCategory;
-  style: ProductStyle;
   priceRange: PriceRange;
   imageUrl: string;
+  projectImageUrl?: string;
   description: string;
-  featured: boolean;
-  handles: string | null;
 }
 
 // Game option shown as a button
@@ -71,7 +69,6 @@ export interface MaterialSelection {
 
 // Enums
 export type ProductCategory = "bucatarii" | "dulapuri" | "mese" | "antreuri" | "altele";
-export type ProductStyle = "modern" | "classic" | "scandinavian" | "industrial";
 export type PriceRange = "budget" | "mid" | "luxury";
 export type RoomType = "bucatarie" | "dulapuri" | "livinguri" | "altele";
 export type KitchenType = "classic" | "modern";

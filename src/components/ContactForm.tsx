@@ -69,18 +69,19 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full h-screen flex flex-col items-center justify-center bg-dark overflow-hidden px-6">
+    <div className="relative w-full min-h-screen flex flex-col items-center justify-center bg-dark overflow-y-auto px-6 py-16 md:py-0">
       {/* Gold line decorations */}
       <div className="absolute left-12 top-0 h-full w-px bg-gold opacity-20"></div>
       <div className="absolute right-12 top-0 h-full w-px bg-gold opacity-20"></div>
 
-      <div className="max-w-6xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
+      <div className="w-full text-center mb-10 md:mb-16">
+        <p className="text-gold text-xs tracking-[0.4em] uppercase mb-3">Contactati-ne</p>
+        <div className="gold-divider"></div>
+      </div>
+
+      <div className="max-w-6xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-center">
         {/* Left — Heading */}
         <div className="flex flex-col">
-          <p className="text-gold text-xs tracking-[0.4em] uppercase mb-4">
-            Contactati-ne
-          </p>
-
           <h2 className="font-serif text-5xl md:text-6xl text-cream font-light leading-tight mb-6"></h2>
 
           <div
@@ -119,6 +120,9 @@ const ContactForm: React.FC = () => {
 
         {/* Right — Form */}
         <div className="flex flex-col gap-6">
+          <p className="text-gold text-xs tracking-[0.4em] uppercase mb-2">
+            Lasati-ne un mesaj
+          </p>
           {/* Name */}
           <div className="flex flex-col gap-2">
             <label className="text-muted text-xs tracking-widest uppercase">
@@ -129,7 +133,7 @@ const ContactForm: React.FC = () => {
               name="name"
               value={form.name}
               onChange={handleChange}
-              placeholder="John Smith"
+              placeholder="Andrei"
               className="bg-transparent border-b border-muted text-cream text-sm py-3 outline-none focus:border-gold transition-colors duration-300 placeholder:text-charcoal"
             ></input>
           </div>
@@ -144,7 +148,7 @@ const ContactForm: React.FC = () => {
               name="email"
               value={form.email}
               onChange={handleChange}
-              placeholder="john@example.com"
+              placeholder="andrei@example.com"
               className="bg-transparent border-b border-muted text-cream text-sm py-3 outline-none focus:border-gold transition-colors duration-300 placeholder:text-charcoal"
             ></input>
           </div>
@@ -152,13 +156,13 @@ const ContactForm: React.FC = () => {
           {/* Message */}
           <div className="flex flex-col gap-2">
             <label className="text-muted text-xs tracking-widest uppercase">
-              Message
+              Mesaj
             </label>
             <textarea
               name="message"
               value={form.message}
               onChange={handleChange}
-              placeholder="Tell us about your project or inquiry..."
+              placeholder="Spuneti-ne despre proiectul dumnevoastra"
               rows={4}
               className="bg-transparent border-b border-muted text-cream text-sm py-3 outline-none focus:border-gold transition-colors duration-300 placeholder:text-charcoal resize-none"
             ></textarea>

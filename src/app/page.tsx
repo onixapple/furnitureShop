@@ -3,6 +3,7 @@
 import React from "react";
 import Hero from "@/components/Hero";
 import ProductCatalog from "@/components/ProductCatalog";
+import ColoriDisponibile from "@/components/ColoriDisponibile";
 import AboutUs from "@/components/AboutUs";
 import ContactForm from "@/components/ContactForm";
 
@@ -15,6 +16,10 @@ export default function Home() {
 
       <section id="catalog">
         <ProductCatalog />
+      </section>
+
+      <section id="culori">
+        <ColoriDisponibile />
       </section>
 
       <section id="about">
