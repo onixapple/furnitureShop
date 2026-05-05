@@ -69,6 +69,14 @@ export interface MaterialSelection {
 
 // Enums
 export type ProductCategory = "bucatarii" | "dulapuri" | "mese" | "antreuri" | "altele";
+export type ProjectCategory = "bucatarii" | "dulapuri" | "altele";
+
+export interface Project {
+  id: string;
+  category: ProjectCategory;
+  imageUrl: string;
+  title?: string;
+}
 export type PriceRange = "budget" | "mid" | "luxury";
 export type RoomType = "bucatarie" | "dulapuri" | "livinguri" | "altele";
 export type KitchenType = "classic" | "modern";
