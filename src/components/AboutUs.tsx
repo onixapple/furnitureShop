@@ -19,13 +19,13 @@ const values: ValueProp[] = [
     icon: "✦",
     title: "Echipa profesionala",
     description:
-      "Designerul este si managerul companiei. A fost constructor timp de 20 de ani, 8 ani in Italia si Germania , si restul in Moldova. Are ochi pentru amanunturi, si efectueaza orice comanda la milimetru. S-a plasat pe locul 2 la campionatul moldovei la pus plita in baie, ceea ce demonstreaza aptitudinile de precizie",
+      "Designerul este si managerul companiei. A fost constructor timp de 20 de ani, 8 ani in Italia si Germania , si restul in Moldova. Are ochi pentru amanunturi, si efectueaza orice comanda la milimetru. A demonstrat aptitudini de precizii in diverse intreceri in domeniul constructiilor in Moldova",
     },
   {
     icon: "✦",
     title: "Toate capriciile pentru banii vostri",
     description:
-      "Preturile incep de la un minim, si cresc in functie de preferinte. De exemplu un dulap ar putea fi amenajat cu lumina ceea ce se adaugalapret. Iar in cazul unei bucatarii, se pot folosi sertare avansate de la blum, balamali blum, sisteme speciale de deschidere a fasadelor si deasemenea lumina cu sensor integrata in dulap.",
+      "Preturile incep de la un minim, si cresc in functie de preferinte. De exemplu un dulap ar putea fi amenajat cu lumina, ar putea avea politele din sticla. Iar in cazul unei bucatarii, se pot folosi sertare avansate, balamale, sisteme speciale de deschidere a fasadelor si deasemenea lumina cu sensor, incorporarea tehnicii de uz casnic si diverse tipuri de blaturi.",
   },
 ];
 
@@ -39,7 +39,7 @@ const AboutUs: React.FC<AboutUsProps> = ({
   heading = "Doua decenii alaturi de voi",
   subheading = "Istoria noastra",
   story =
-    "In 2005 Cazacu Teodor s-a intors de peste hotare cu scopul de a renunta la meseria de construtor. Prima lucrare a fost chiar la el acasa. O bucatarie de 4,5 metri, care pana si acum nu a necesitat reparatii. In 2010 a fost deschisa compania, care pana in ziua de astazi a efectuat peste 1000 de lucrari pe tot teritoriul Moldovei, precum si peste hotare.",
+    "In 2005 Cazacu Teodor a revenit de peste hotare cu scopul de a renunta la meseria de construtor. Nu s-a reprofilat complet , intrucat proiectarea mobilei e inteleasa mai bine cand ai in spate ani de experienta ca inginer constructor si proiectant. Prima lucrare a fost realizata chiar la el acasa. O bucatarie de 7 metri, care nici pana acum nu a avut nevoie de interventii. In 2010 a fost deschisa compania, care pana in ziua de astazi a efectuat peste 1000 de lucrari pe tot teritoriul Moldovei, precum si peste hotare.",
 }) => {
   return (
     <div className="relative w-full min-h-screen flex flex-col items-center justify-center bg-charcoal overflow-y-auto px-6 py-20 md:py-0">
@@ -70,7 +70,7 @@ const AboutUs: React.FC<AboutUsProps> = ({
           </p>
 
           <p className="text-muted text-sm leading-relaxed tracking-wide">
-            Astazi, noi ne asumam cele mai dificile lucrari, care necesita proiecte individuale, saptamani de pregatire, ca intr-un final sa indeplinim cu success fiecare obiect.
+            Astazi, noi ne asumam cele mai dificile lucrari, care necesita o abordare individuala, ca intr-un final sa indeplinim cu success fiecare obiect.
           </p>
 
           {/* Stat row */}

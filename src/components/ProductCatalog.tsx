@@ -1,9 +1,12 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import ProductCard from "@/components/ProductCard";
+import ZoomableImage from "@/components/ZoomableImage";
 import { fetchProducts } from "@/lib/products";
 import { Product, ProductCategory } from "@/types";
+
+const IMG_LABELS = ["Foto", "Proiect"];
 
 interface ActiveFilters {
   category: ProductCategory | null;
@@ -12,7 +15,6 @@ interface ActiveFilters {
 const categoryOptions: { label: string; value: ProductCategory }[] = [
   { label: "Bucatarii", value: "bucatarii" },
   { label: "Dulapuri", value: "dulapuri" },
-  { label: "Antreuri", value: "antreuri" },
   { label: "Altele", value: "altele" },
 ];
 
@@ -25,6 +27,41 @@ const ProductCatalog: React.FC = () => {
   const [filters, setFilters] = useState<ActiveFilters>({ category: null });
   const [atBottom, setAtBottom] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number>(-1);
+  const [lightboxImgIdx, setLightboxImgIdx] = useState<number>(0);
+
+  const lightboxProduct = lightboxIndex >= 0 ? filtered[lightboxIndex] : null;
+  const lightboxImages = lightboxProduct
+    ? [lightboxProduct.imageUrl, ...(lightboxProduct.projectImageUrl ? [lightboxProduct.projectImageUrl] : [])]
+    : [];
+  const lightboxHasMultiple = lightboxImages.length > 1;
+
+  const openLightbox = (product: Product) => {
+    const idx = filtered.findIndex((p) => p.id === product.id);
+    setLightboxIndex(idx);
+    setLightboxImgIdx(0);
+  };
+
+  const prevProduct = useCallback(() => {
+    setLightboxIndex((i) => (i - 1 + filtered.length) % filtered.length);
+    setLightboxImgIdx(0);
+  }, [filtered.length]);
+
+  const nextProduct = useCallback(() => {
+    setLightboxIndex((i) => (i + 1) % filtered.length);
+    setLightboxImgIdx(0);
+  }, [filtered.length]);
+
+  useEffect(() => {
+    if (lightboxIndex < 0) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") prevProduct();
+      if (e.key === "ArrowRight") nextProduct();
+      if (e.key === "Escape") setLightboxIndex(-1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightboxIndex, prevProduct, nextProduct]);
 
   const handleScroll = (): void => {
     const el = scrollRef.current;
@@ -155,7 +192,7 @@ const ProductCatalog: React.FC = () => {
           <>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {filtered.slice(0, visible).map((product: Product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={product} onImageClick={() => openLightbox(product)} />
               ))}
             </div>
             {visible < filtered.length && (
@@ -187,6 +224,85 @@ const ProductCatalog: React.FC = () => {
           </svg>
         </div>
       </div>
+
+      {/* Lightbox */}
+      {lightboxProduct && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md"
+          onClick={() => setLightboxIndex(-1)}
+        >
+          <div
+            className="relative flex flex-col items-center w-full max-w-4xl mx-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative w-full flex items-center justify-center">
+              <ZoomableImage
+                src={lightboxImages[lightboxImgIdx]}
+                alt={IMG_LABELS[lightboxImgIdx]}
+                className="max-h-[75vh] w-full rounded-xl shadow-2xl"
+              />
+
+              {/* Prev product */}
+              {filtered.length > 1 && (
+                <button
+                  onClick={prevProduct}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors duration-200 backdrop-blur-sm"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+              )}
+
+              {/* Next product */}
+              {filtered.length > 1 && (
+                <button
+                  onClick={nextProduct}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors duration-200 backdrop-blur-sm"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              )}
+
+              {/* Close */}
+              <button
+                onClick={() => setLightboxIndex(-1)}
+                className="absolute top-3 right-3 bg-black/50 hover:bg-black/80 text-white rounded-full w-9 h-9 flex items-center justify-center transition-colors duration-200 backdrop-blur-sm text-sm"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="mt-4 flex flex-col items-center gap-3">
+              {/* Foto / Proiect tabs */}
+              {lightboxHasMultiple && (
+                <div className="flex gap-2">
+                  {lightboxImages.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setLightboxImgIdx(i)}
+                      className={
+                        "text-[10px] tracking-widest uppercase px-4 py-1.5 border transition-all duration-300 " +
+                        (i === lightboxImgIdx
+                          ? "border-gold text-gold"
+                          : "border-white/20 text-muted hover:border-gold/50 hover:text-cream")
+                      }
+                    >
+                      {IMG_LABELS[i]}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <p className="text-cream font-serif text-lg">{lightboxProduct.category}</p>
+              <p className="text-muted text-xs leading-relaxed">{lightboxProduct.description}</p>
+              <p className="text-muted text-xs">{lightboxIndex + 1} / {filtered.length}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

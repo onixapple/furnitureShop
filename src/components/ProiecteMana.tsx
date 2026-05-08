@@ -3,9 +3,9 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { fetchProjects } from "@/lib/projects";
 import { Project, ProjectCategory } from "@/types";
+import ZoomableImage from "@/components/ZoomableImage";
 
-const filters: { label: string; value: ProjectCategory | null }[] = [
-  { label: "Toate", value: null },
+const filters: { label: string; value: ProjectCategory }[] = [
   { label: "Bucatarii", value: "bucatarii" },
   { label: "Dulapuri", value: "dulapuri" },
   { label: "Altele", value: "altele" },
@@ -60,38 +60,27 @@ const ProiecteMana: React.FC = () => {
 
   return (
     <>
-      <div className="relative w-full min-h-screen flex flex-col bg-charcoal overflow-y-auto py-20 px-6">
-
-        {/* Gold line decorations */}
-        <div className="absolute left-12 top-0 h-full w-px bg-gold opacity-20 pointer-events-none" />
-        <div className="absolute right-12 top-0 h-full w-px bg-gold opacity-20 pointer-events-none" />
-        <div className="absolute top-0 left-12 right-12 h-px bg-gold opacity-10 pointer-events-none" />
+      <div className="relative w-full min-h-screen flex flex-col bg-dark overflow-y-auto py-8">
 
         {/* Header */}
-        <div className="text-center mb-10">
-          <p className="text-gold text-xs tracking-[0.4em] uppercase mb-4">
-            Atelier
-          </p>
-          <h2 className="font-serif text-5xl md:text-6xl text-cream font-light leading-tight">
-            Proiecte de mana
+        <div className="text-center pt-8 pb-4 px-6">
+          <h2 className="font-serif text-4xl text-cream font-light mb-3">
+            Proiecte de mînă realizate în creion
           </h2>
           <div className="gold-divider" />
-          <p className="text-muted text-sm tracking-wide max-w-lg mx-auto leading-relaxed">
-            De 15 ani realizam proiecte individuale pentru fiecare uz casnic.
-          </p>
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
+        <div className="sticky top-0 z-10 flex flex-wrap justify-center gap-3 px-6 pb-6 pt-4 bg-dark/90 backdrop-blur-sm">
           {filters.map((f) => (
             <button
               key={String(f.value)}
-              onClick={() => setActiveCategory(f.value)}
+              onClick={() => setActiveCategory((prev) => prev === f.value ? null : f.value)}
               className={
-                "text-xs tracking-widest uppercase px-6 py-2 border transition-all duration-300 " +
+                "text-xs tracking-widest uppercase px-5 py-2 rounded-full border transition-all duration-300 " +
                 (activeCategory === f.value
-                  ? "border-gold bg-gold text-dark"
-                  : "border-white/10 text-muted hover:border-gold/50 hover:text-cream")
+                  ? "border-gold bg-gold text-dark shadow-md shadow-gold/30"
+                  : "border-white/10 text-muted hover:border-gold/60 hover:text-cream hover:bg-white/5")
               }
             >
               {f.label}
@@ -100,48 +89,47 @@ const ProiecteMana: React.FC = () => {
         </div>
 
         {/* Grid */}
-        <div className="max-w-6xl w-full mx-auto flex-1">
+        <div className="px-10 pb-6">
           {loading ? (
-            <div className="flex items-center justify-center h-48">
+            <div className="flex items-center justify-center h-40">
               <p className="text-muted text-xs tracking-widest uppercase">Se incarca...</p>
             </div>
           ) : filtered.length === 0 ? (
-            <div className="flex items-center justify-center h-48">
+            <div className="flex items-center justify-center h-40">
               <p className="text-muted text-xs tracking-widest uppercase">Nu s-au gasit proiecte.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-px bg-gold/10">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {filtered.map((project) => (
                 <div
                   key={project.id}
-                  className="group relative overflow-hidden bg-charcoal cursor-pointer"
-                  style={{ aspectRatio: "4 / 3" }}
+                  className="group rounded-2xl overflow-hidden border border-white/10 hover:border-gold/50 bg-white/5 backdrop-blur-sm transition-all duration-400 hover:shadow-lg hover:shadow-gold/10 cursor-pointer"
                   onClick={() => openLightbox(project)}
                 >
-                  <img
-                    src={project.imageUrl}
-                    alt={project.title ?? project.category}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-
-                  {/* Hover overlay */}
-                  <div className="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-400 flex flex-col items-center justify-center gap-3">
-                    <div className="w-8 h-px bg-gold" />
-                    <p className="text-cream font-serif text-lg font-light tracking-wide">
+                  <div className="relative w-full" style={{ height: "160px" }}>
+                    <img
+                      src={project.imageUrl}
+                      alt={project.title ?? project.category}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="bg-black/40 backdrop-blur-sm rounded-full p-3">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="px-4 py-3">
+                    <p className="text-muted text-xs leading-snug line-clamp-1">
                       {project.title ?? project.category}
                     </p>
-                    <p className="text-gold text-[10px] tracking-[0.35em] uppercase">
-                      {project.category}
-                    </p>
-                    <div className="w-8 h-px bg-gold" />
                   </div>
                 </div>
               ))}
             </div>
           )}
         </div>
-
-        <div className="absolute bottom-0 left-12 right-12 h-px bg-gold opacity-10 pointer-events-none" />
       </div>
 
       {/* Lightbox */}
@@ -155,10 +143,10 @@ const ProiecteMana: React.FC = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="relative w-full">
-              <img
+              <ZoomableImage
                 src={lightbox.imageUrl}
                 alt={lightbox.title ?? lightbox.category}
-                className="w-full max-h-[80vh] object-contain"
+                className="w-full max-h-[80vh]"
               />
 
               {/* Prev */}

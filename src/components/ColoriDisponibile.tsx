@@ -75,11 +75,12 @@ const ColoriDisponibile: React.FC = () => {
           Materiale
         </p>
         <h2 className="font-serif text-5xl md:text-6xl text-cream font-light leading-tight mb-6">
-          Culori Disponibile
+          Culori populare
         </h2>
         <div className="gold-divider" />
         <p className="text-muted text-sm tracking-wide mt-6 max-w-md mx-auto leading-relaxed">
-          Fiecare piesa este finisata in culoarea aleasa de dumneavoastra, din paleta noastra de materiale premium.
+          Sunt disponibile mai multe alegeri de culori care deriva din cele de mai jos. 
+          
         </p>
       </div>
 
