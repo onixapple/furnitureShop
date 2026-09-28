@@ -66,7 +66,7 @@ export default function ZoomableImage({ src, alt, className = "" }: Props) {
 
   return (
     <div
-      className={`overflow-hidden ${className}`}
+      className={`flex items-center justify-center overflow-hidden ${className}`}
       style={{ touchAction: "none" }}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
@@ -78,7 +78,7 @@ export default function ZoomableImage({ src, alt, className = "" }: Props) {
         src={src}
         alt={alt}
         draggable={false}
-        className="w-full h-full object-contain select-none"
+        className="max-w-full max-h-[80vh] object-contain select-none"
         style={{
           transform: `scale(${scale}) translate(${pos.x / scale}px, ${pos.y / scale}px)`,
           transition: scale === 1 ? "transform 0.25s ease" : "none",

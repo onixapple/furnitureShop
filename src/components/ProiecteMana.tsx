@@ -146,7 +146,7 @@ const ProiecteMana: React.FC = () => {
               <ZoomableImage
                 src={lightbox.imageUrl}
                 alt={lightbox.title ?? lightbox.category}
-                className="w-full max-h-[80vh]"
+                className="w-full"
               />
 
               {/* Prev */}

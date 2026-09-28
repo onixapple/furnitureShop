@@ -239,7 +239,7 @@ const ProductCatalog: React.FC = () => {
               <ZoomableImage
                 src={lightboxImages[lightboxImgIdx]}
                 alt={IMG_LABELS[lightboxImgIdx]}
-                className="max-h-[75vh] w-full rounded-xl shadow-2xl"
+                className="w-full rounded-xl shadow-2xl"
               />
 
               {/* Prev product */}
